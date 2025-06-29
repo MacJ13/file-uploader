@@ -1,10 +1,16 @@
 import express, { Request, Response, NextFunction } from "express";
+import morgan from "morgan";
+
 import { PORT } from "./config";
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+if (process.env.NODE_ENV === "development") {
+  app.use(morgan("dev"));
+}
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello World");
