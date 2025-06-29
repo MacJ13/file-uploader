@@ -1,8 +1,7 @@
 import express, { Request, Response, NextFunction } from "express";
+import { PORT } from "./config";
 
 const app = express();
-
-const port = 8000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -24,6 +23,6 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   res.send(err.message);
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on port: ${port}`);
+app.listen(PORT, () => {
+  console.log(`Server is running on port: ${PORT}`);
 });

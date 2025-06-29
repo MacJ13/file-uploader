@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    // Wyłącz source mapy i pliki definicji w buildzie
+    "sourceMap": false,
+    "declaration": false
+    // Możesz tu też nadpisać inne opcje, np. target lub moduł
+  },
+  "exclude": ["node_modules", "src/**/*.spec.ts", "dist"]
+}
