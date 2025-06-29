@@ -8,7 +8,7 @@
     "watch:css": "postcss public/css/styles.css -o public/css/tailwind.css --watch",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "concurrently \"npm run watch:css\" \"cross-env NODE_ENV=development ts-node-dev --respawn --transpile-only src/app.ts\"",
-    "copy-views": "copyfiles -u 1 src/views/**/* dist/views",
+    "copy-views": "copyfiles -u 2 src/views/**/* dist/views",
     "build": "npm run build:css && tsc --project tsconfig.build.json && npm run copy-views",
     "start": "cross-env NODE_ENV=production node dist/app.js"
   },
