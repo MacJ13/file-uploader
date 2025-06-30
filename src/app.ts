@@ -3,6 +3,7 @@ import morgan from "morgan";
 
 import { PORT } from "./config/env.config";
 import path from "path";
+import homeRouter from "./routes/home.router";
 
 const app = express();
 
@@ -19,10 +20,7 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
-app.get("/", (req: Request, res: Response) => {
-  // res.send("Hello World");
-  res.render("pages/index", { message: "Hello World" });
-});
+app.use("/", homeRouter);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   const err = new Error("Page not exist!");
@@ -34,7 +32,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   if (err) {
     console.log(err);
   }
-  res.send(err.message);
+  res.status(404).send(err.message);
 });
 
 app.listen(PORT, () => {
