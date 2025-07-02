@@ -1,12 +1,20 @@
-<!DOCTYPE html>
-<html lang="pl">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="/public/css/tailwind.css" rel="stylesheet" />
-    <title>Main page</title>
-  </head>
-  <body class="bg-gray-100 flex items-center justify-center h-screen">
-    <h1 class="text-4xl font-bold text-blue-600"><%= locals.message %></h1>
-  </body>
-</html>
+<%- include("../partials/head.ejs") %>
+<!-- <body class="bg-gray-100 flex items-center justify-center h-screen"></body> -->
+<body class="body">
+ <%- include("../partials/navigation.ejs") %>
+<main>
+  <div class="text-center">
+      <h1 class="text-4xl font-bold mb-4 uppercase">Welcome to file app page</h1>
+      <p class="font-bold ">To fully page experience 
+        <br/>
+        you must <a class="underline decoration-2" href="#">register</a>  or <a class="underline decoration-2" href="#">login</a> to the page
+      </p>
+    </div>
+
+</main>  
+</body>
+
+
+<%- include("../partials/footer.ejs") %>
+
+

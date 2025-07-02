@@ -1,0 +1,17 @@
+@layer components {
+  .nav {
+    @apply flex items-center justify-between flex-row w-full py-4 px-10 border-b border-b-stone-50;
+  }
+
+  .nav_logo {
+    @apply text-2xl font-semibold capitalize;
+  }
+
+  .nav_menu {
+    @apply flex items-center gap-10;
+  }
+
+  .nav_link {
+    @apply text-xl font-semibold capitalize;
+  }
+}

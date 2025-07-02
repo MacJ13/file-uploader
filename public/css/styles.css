@@ -1,5 +1,19 @@
 @import "tailwindcss";
 
+@import "./components/navigation.css";
+
+@layer components {
+  .body {
+    @apply flex items-center h-screen flex-col justify-between w-full;
+  }
+}
+
+html {
+  box-sizing: border-box;
+  background-color: black;
+  color: white;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
