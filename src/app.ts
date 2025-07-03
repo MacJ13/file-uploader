@@ -4,6 +4,8 @@ import morgan from "morgan";
 import { PORT } from "./config/env.config";
 import path from "path";
 import homeRouter from "./routes/home.router";
+import notFound from "./middlewares/notFound";
+import handleError from "./middlewares/handleError";
 
 const app = express();
 
@@ -22,18 +24,8 @@ if (process.env.NODE_ENV === "development") {
 
 app.use("/", homeRouter);
 
-app.use((req: Request, res: Response, next: NextFunction) => {
-  const err = new Error("Page not exist!");
-
-  next(err);
-});
-
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  if (err) {
-    console.log(err);
-  }
-  res.status(404).send(err.message);
-});
+app.use(notFound);
+app.use(handleError);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port: ${PORT}`);
