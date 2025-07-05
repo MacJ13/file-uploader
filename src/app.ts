@@ -6,6 +6,7 @@ import path from "path";
 import homeRouter from "./routes/home.router";
 import notFound from "./middlewares/notFound";
 import handleError from "./middlewares/handleError";
+import authRouter from "./routes/auth.router";
 
 const app = express();
 
@@ -23,6 +24,7 @@ if (process.env.NODE_ENV === "development") {
 }
 
 app.use("/", homeRouter);
+app.use("/auth", authRouter);
 
 app.use(notFound);
 app.use(handleError);

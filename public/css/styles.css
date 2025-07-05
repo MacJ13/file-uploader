@@ -2,6 +2,8 @@
 
 @import "./components/navigation.css";
 
+@import "./components/form.css";
+
 @layer components {
   .body {
     @apply flex items-center h-screen flex-col justify-between w-full;

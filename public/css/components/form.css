@@ -1,0 +1,25 @@
+@layer components {
+  .form-input {
+    @apply bg-stone-50 text-stone-950 px-2 py-1 font-sans text-sm font-medium outline;
+  }
+
+  .form-label {
+    @apply uppercase text-xs tracking-wide;
+  }
+
+  .form-field {
+    @apply flex flex-col gap-1 mb-4 font-medium w-full;
+  }
+
+  .form-field-last {
+    @apply mt-3;
+  }
+
+  .form-button {
+    @apply bg-stone-50 text-stone-950 px-2 py-2;
+  }
+
+  .form-box {
+    @apply flex flex-col py-3 w-full;
+  }
+}

@@ -1,0 +1,35 @@
+<%- include("../partials/head.ejs") %>
+<!-- <body class="bg-gray-100 flex items-center justify-center h-screen"></body> -->
+<body class="body">
+ <%- include("../partials/navigation.ejs") %>
+<main >
+     <h1 class="text-4xl font-bold mb-4 uppercase">Create new account</h1>
+  <div class="flex flex-col justify-center items-center max-w-96">
+      <form class="form-box" method="post" action="/auth/register">
+    <div class="form-field">
+        <label for="username" class="form-label">username</label>
+        <input id="username" type="text"name="username" value="" class="form-input" />
+    </div>
+    <div class="form-field">
+        <label for="email" class="form-label">email</label>
+        <input id="email" type="email" name="email" value="" class="form-input" />
+    </div>
+    <div class="form-field">
+        <label for="password" class="form-label">password</label>
+        <input id="password" type="password" name="password" value="" class="form-input" />
+    </div>
+        <div class="form-field">
+        <label for="confirm" class="form-label">confrim password</label>
+        <input id="confirm" type="password" name="confirm" value="" class="form-input" />
+    </div>
+    <div class="form-field form-field-last">
+      <button class="form-button" type="submit">create account</button>
+    </div>
+  </form>
+  </div>
+   
+</main>  
+</body>
+
+
+<%- include("../partials/footer.ejs") %>
