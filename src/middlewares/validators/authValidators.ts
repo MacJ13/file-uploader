@@ -1,4 +1,5 @@
 import { body } from "express-validator";
+import { findUserByEmail, findUserByName } from "../../services/user.service";
 
 export const registerValidation = [
   body("username")
@@ -7,6 +8,12 @@ export const registerValidation = [
     .withMessage("username must not be empty")
     .isLength({ min: 3 })
     .withMessage("username must contain at least 3 letters")
+    .custom(async (val) => {
+      const user = await findUserByName(val);
+      if (user) {
+        throw new Error("username already in user");
+      }
+    })
     .escape(),
   body("email")
     .trim()
@@ -14,6 +21,12 @@ export const registerValidation = [
     .withMessage("email must not be empty")
     .isEmail()
     .withMessage("valid email structure")
+    .custom(async (val) => {
+      const user = await findUserByEmail(val);
+      if (user) {
+        throw new Error("email already in user");
+      }
+    })
     .escape(),
   body("password")
     .notEmpty()
