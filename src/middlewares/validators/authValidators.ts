@@ -19,13 +19,15 @@ export const registerValidation = [
     .notEmpty()
     .withMessage("password must not by empty")
     .isLength({ min: 8 })
-    .withMessage("message must contain at least 8 letters")
+    .withMessage("password must contain at least 8 letters")
     .custom((value) => !/\s/.test(value))
     .withMessage("No spaces are allowed in the password")
     .escape(),
   body("confirm")
     .notEmpty()
     .withMessage("confirm password must not be empty")
+    .isLength({ min: 8 })
+    .withMessage("confirm password must contain at least 8 letters")
     .custom((value, { req }) => {
       return value === req.body.password;
     })
