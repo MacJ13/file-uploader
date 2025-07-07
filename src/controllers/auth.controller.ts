@@ -1,6 +1,7 @@
 import { validationResult } from "express-validator";
 import { HandlerType } from "../types/handlers";
 import { saveUser } from "../services/user.service";
+import { title } from "process";
 
 const register_get: HandlerType = (req, res, next) => {
   console.log(__dirname);
@@ -30,10 +31,14 @@ const register_post: HandlerType = async (req, res, next) => {
     // 4. save user in db
 
     await saveUser(restUserData);
-    res.redirect("/");
+    res.redirect("/auth/login");
   } catch (err) {
     next(err);
   }
 };
 
-export default { register_get, register_post };
+const login_get: HandlerType = (req, res, next) => {
+  res.render("pages/loginForm", { title: "Login form" });
+};
+
+export default { register_get, register_post, login_get };

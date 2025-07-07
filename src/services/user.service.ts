@@ -28,12 +28,12 @@ export const saveUser = async (user: User) => {
   const salt = brcypt.genSaltSync(10);
   const hash = brcypt.hashSync(user.password, salt);
 
-  const newUser = await prisma.user.create({
+  //2 . create user with prsima
+  await prisma.user.create({
     data: {
       username: user.username,
       email: user.email,
       password: hash,
     },
   });
-  console.log(newUser);
 };

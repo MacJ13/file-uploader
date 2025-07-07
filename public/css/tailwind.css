@@ -235,6 +235,9 @@
   .relative {
     position: relative;
   }
+  .m-auto {
+    margin: auto;
+  }
   .mb-2 {
     margin-bottom: calc(var(--spacing) * 2);
   }
