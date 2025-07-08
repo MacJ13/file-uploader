@@ -1,4 +1,4 @@
-import express, { Request, Response, NextFunction } from "express";
+import express from "express";
 import morgan from "morgan";
 
 import { PORT } from "./config/env.config";
@@ -7,6 +7,7 @@ import homeRouter from "./routes/home.router";
 import notFound from "./middlewares/notFound";
 import handleError from "./middlewares/handleError";
 import authRouter from "./routes/auth.router";
+import { sessionMiddleware } from "./config/session.config";
 
 const app = express();
 
@@ -22,6 +23,8 @@ app.set("views", path.join(__dirname, "views"));
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
+
+app.use(sessionMiddleware);
 
 app.use("/", homeRouter);
 app.use("/auth", authRouter);

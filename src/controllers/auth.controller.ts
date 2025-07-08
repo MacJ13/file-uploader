@@ -1,10 +1,8 @@
 import { validationResult } from "express-validator";
 import { HandlerType } from "../types/handlers";
 import { saveUser } from "../services/user.service";
-import { title } from "process";
 
 const register_get: HandlerType = (req, res, next) => {
-  console.log(__dirname);
   res.render("pages/registerForm", { title: "Register form" });
 };
 
