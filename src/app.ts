@@ -8,6 +8,8 @@ import notFound from "./middlewares/notFound";
 import handleError from "./middlewares/handleError";
 import authRouter from "./routes/auth.router";
 import { sessionMiddleware } from "./config/session.config";
+import passport from "./config/passport.config";
+import userRouter from "./routes/user.router";
 
 const app = express();
 
@@ -25,6 +27,8 @@ if (process.env.NODE_ENV === "development") {
 }
 
 app.use(sessionMiddleware);
+
+app.use(passport.session());
 
 app.use("/", homeRouter);
 app.use("/auth", authRouter);

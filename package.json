@@ -28,6 +28,8 @@
     "express-session": "^1.18.1",
     "express-validator": "^7.2.1",
     "morgan": "^1.10.0",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0",
     "prisma": "^6.11.1"
   },
   "devDependencies": {
@@ -38,6 +40,8 @@
     "@types/express-session": "^1.18.2",
     "@types/morgan": "^1.9.10",
     "@types/node": "^24.0.7",
+    "@types/passport": "^1.0.17",
+    "@types/passport-local": "^1.0.38",
     "autoprefixer": "^10.4.21",
     "copyfiles": "^2.4.1",
     "cross-env": "^7.0.3",

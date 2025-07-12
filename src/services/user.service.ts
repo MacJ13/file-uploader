@@ -13,6 +13,16 @@ export const findUserByName = async (username: string) => {
   return user;
 };
 
+export const findUserById = async (id: number) => {
+  const user = await prisma.user.findUnique({
+    where: {
+      id: id,
+    },
+  });
+
+  return user;
+};
+
 export const findUserByEmail = async (email: string) => {
   const user = await prisma.user.findUnique({
     where: {
@@ -36,4 +46,13 @@ export const saveUser = async (user: User) => {
       password: hash,
     },
   });
+};
+
+export const verifyUserPassword = (
+  password: string,
+  hash: string
+): Promise<boolean> => {
+  const match = brcypt.compare(password, hash);
+
+  return match;
 };
