@@ -1,8 +1,9 @@
+
 <ul class="form-errors">
     <h2 class="text-lg font-bold uppercase text-center mb-2">Field Errors</h2>
     <% locals.errors.forEach(error => { %>       
         <li>
-            <%= error.msg %>
+            <%= error %>
         </li>
     <% }) %>
 </ul>

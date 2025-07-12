@@ -7,6 +7,10 @@ export type HandlerType = (
   next: NextFunction
 ) => void;
 
+export type AsyncHandlerType<T> = (
+  ...args: Parameters<HandlerType>
+) => Promise<T>;
+
 export type ErrorHandlerType = (
   err: Error | CustomError,
   ...args: Parameters<HandlerType>
