@@ -15,3 +15,8 @@ export type ErrorHandlerType = (
   err: Error | CustomError,
   ...args: Parameters<HandlerType>
 ) => void;
+
+export type ValidationHandlerType = {
+  view: string;
+  title: string;
+};

@@ -11,23 +11,7 @@ const register_get: HandlerType = (req, res, next) => {
 };
 
 const register_post: HandlerType = async (req, res, next) => {
-  //1. get user date from req.body
   const userData = req.body;
-  // 2. get error result from express validaton
-  const errorResult = validationResult(req);
-
-  // 3. check is errorResult is empty
-  if (!errorResult.isEmpty()) {
-    // 3a. render register Form with error validtion
-    const errors = getValidationErrorMessages(errorResult.array());
-
-    res.render("pages/registerForm", {
-      title: "Register form",
-      errors: errors,
-      data: userData,
-    });
-    return;
-  }
 
   try {
     const { confirm, ...restUserData } = userData;
@@ -44,26 +28,6 @@ const login_get: HandlerType = async (req, res, next) => {
   res.render("pages/loginForm", { title: "Login form" });
 };
 
-const login_post: HandlerType = (req, res, next) => {
-  const userData = req.body;
-
-  const errorResult = validationResult(req);
-
-  if (!errorResult.isEmpty()) {
-    // 3a. render register Form with error validtion
-    const errors = getValidationErrorMessages(errorResult.array());
-
-    res.render("pages/loginForm", {
-      title: "Login Form",
-      errors: errors,
-      data: userData,
-    });
-    return;
-  }
-
-  next();
-};
-
 const login_authenticate: HandlerType = async (req, res, next) => {
   try {
     const { user, info } = await authenticateLocal(req, res, next);
@@ -72,9 +36,11 @@ const login_authenticate: HandlerType = async (req, res, next) => {
       const errorMessages = createErrorMessageArray(info.message);
       const userData = req.body;
 
-      res
-        .status(401)
-        .render("pages/loginForm", { errors: errorMessages, data: userData });
+      res.status(401).render("pages/loginForm", {
+        title: "Login Form",
+        errors: errorMessages,
+        data: userData,
+      });
       return;
     }
 
@@ -114,6 +80,5 @@ export default {
   register_get,
   register_post,
   login_get,
-  login_post,
   login_authenticate,
 };
