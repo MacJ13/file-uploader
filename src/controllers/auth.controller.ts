@@ -1,8 +1,6 @@
-import { validationResult } from "express-validator";
 import { HandlerType } from "../types/handlers";
 import { saveUser } from "../services/user.service";
 
-import { getValidationErrorMessages } from "../utils/errors/getValidationErrorMessages";
 import { createErrorMessageArray } from "../utils/errors/createErrorMessageArray";
 import { authenticateLocal, loginUser } from "../services/auth.service";
 
@@ -50,30 +48,19 @@ const login_authenticate: HandlerType = async (req, res, next) => {
   } catch (err) {
     return next(err);
   }
-  // passport.authenticate(
-  //   "local",
-  //   (err: Error, user: User | false, info: { message: string }) => {
-  //     if (err) return next(err);
+};
 
-  //     if (!user) {
-  //       const userData = req.body;
-  //       const errorMessages = createErrorMessageArray(info.message);
+const logout_get: HandlerType = (req, res, next) => {
+  req.logOut((err) => {
+    if (err) return next(err);
 
-  //       res.status(401).render("pages/loginForm", {
-  //         errors: errorMessages,
-  //         data: userData,
-  //       });
-  //       return;
-  //     }
+    req.session.destroy((err) => {
+      if (err) return next(err);
 
-  //     req.logIn(user, (err) => {
-  //       if (err) return next(err);
-
-  //       res.redirect(`/user/${user.id}`);
-  //       return;
-  //     });
-  //   }
-  // )(req, res, next);
+      res.clearCookie("connect.sid");
+      res.redirect("/");
+    });
+  });
 };
 
 export default {
@@ -81,4 +68,5 @@ export default {
   register_post,
   login_get,
   login_authenticate,
+  logout_get,
 };
