@@ -1,0 +1,13 @@
+@layer components {
+  .sidebar {
+    @apply px-8 py-6 flex-none min-h-0 bg-neutral-50/33 rounded-r-xl;
+  }
+
+  .sidebar-menu {
+    @apply text-left capitalize font-medium;
+  }
+
+  .sidebar-item {
+    @apply mb-3;
+  }
+}
