@@ -6,6 +6,8 @@
 
 @import "./components/sidebar.css";
 
+@import "./components/dashboard.css";
+
 @layer components {
   .body {
     @apply flex items-center h-full min-h-screen w-full flex-col justify-between w-full;

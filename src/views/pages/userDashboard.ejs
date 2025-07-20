@@ -1,0 +1,152 @@
+<%- include("../partials/head.ejs") %>
+<!-- <body class="bg-gray-100 flex items-center justify-center h-screen"></body> -->
+ <%- include("../partials/navigation.ejs") %>
+<body class="body">
+
+<main class="main py-8">
+      <div class="flex-1 flex min-h-0 w-full">
+        <%- include("../partials/sidebar.ejs") %>
+        <div class="dashboard">
+          <div class="w-full">
+            <h2 class="dashboard-heading">last viewed folders:</h2>
+            <% if(locals.folders.length) { %>
+              <ul class="dashboard-list gap-8">
+                <% locals.folders.forEach(folder => { %>
+                  <a href="#" class="dashboard-folder-link">
+                    <%- include("../icons/folder.ejs") %>
+                    <span>folder 5</span>
+                  </a>
+                <% }); %>
+              </ul>
+              <a href="#">show all folders >></a>
+            <% } else { %>
+              <em>there is no folders. <u><a href="#">add new folder</a></u></em>
+            <% } %>
+
+           
+            <!-- <ul class="dashboard-list gap-8">
+              <li class="dashboard-folder-link">
+                <%- include("../icons/folder.ejs") %>
+                <span>folder 5</span>
+              </li>
+              <li class="dashboard-folder-item">
+                <%- include("../icons/folder.ejs") %>
+                <span>new folder name</span>
+              </li>
+              <li class="dashboard-folder-item">
+                <%- include("../icons/folder.ejs") %>
+                <span>folder 2</span>
+              </li>
+              <li class="dashboard-folder-item">
+                <%- include("../icons/folder.ejs") %>
+                <span>folder 3</span>
+              </li>
+              <li class="dashboard-folder-item">
+                <%- include("../icons/folder.ejs") %>
+                <span>folder 4</span>
+              </li>
+              <li class="dashboard-folder-item">
+                <%- include("../icons/folder.ejs") %>
+                <span>folder 5</span>
+              </li>
+            </ul> -->
+
+          </div>
+          <div class="flex flex-col">
+            <h2 class="dashboard-heading">last added files:</h2>
+            <% if(locals.files.length) { %>
+              <table class="dashboard-list gap-5">
+                <thead class="w-full">
+                  <tr class="dashboard-table-head">
+                    <th class="flex flex-2 gap-2 items-center">
+                      name:
+                    </th>
+                    <th class="flex-1">created at:</th>
+                    <th class="flex-1">location</th>
+                    <th class="h-5 w-5">&nbsp;</th>
+                  </tr>
+                </thead>
+                <tbody class="w-full flex flex-col gap-8">
+                  <% locals.files.forEach(files => { %>
+                    <tr class="dashboard-table-row">
+                      <td class="flex flex-2 gap-2 items-center">
+                        <%- include("../icons/file.ejs") %>
+                        <span>file 1</span>
+                      </td>
+                      <td class="flex-1">20-07-2025</td>
+                      <td class="flex-1">my location</td>
+                      <td>
+                        <%- include("../icons/more.ejs") %>
+                      </td>            
+                    </tr>
+                  <% }); %>
+                </tbody>
+              </table>
+              <a href="#">show all files >></a>
+            <% } else { %>
+                  <em>there is no files. <u><a href="#">add new file</a></u></em>
+            <% } %>
+
+          </div>
+        </div>
+      </div>
+</main>  
+</body>
+
+
+            <!-- <ul class="dashboard-list gap-8">
+              <li class="flex items-center px-2 gap-2 rounded-lg w-full">
+                <div class="flex flex-2 gap-2 items-center">
+                  name:
+                </div>
+                <span class="flex-1">created at:</span>
+                <span class="flex-1">location</span>
+                <span class="h-5 w-5">&nbsp;</span>
+              </li>
+              <li class="flex items-center py-1 px-2 gap-2 bg-neutral-50/33 rounded-lg w-full">
+                <div class="flex flex-2 gap-2 items-center">
+                  <%- include("../icons/file.ejs") %>
+                  <span>file 1</span>
+                </div>
+
+              
+                <span class="flex-1">20-07-2025</span>
+                <span class="flex-1">my location</span>
+                <%- include("../icons/more.ejs") %>
+              </li>
+              <li class="flex items-center py-1 px-2 gap-2 bg-neutral-50/33 rounded-lg w-full">
+                <div class="flex flex-2 gap-2 items-center">
+                  <%- include("../icons/file.ejs") %>
+                  <span>file 1</span>
+                </div>
+
+              
+                <span class="flex-1">20-07-2025</span>
+                <span class="flex-1">my location</span>
+                <%- include("../icons/more.ejs") %>
+              </li>
+              <li class="flex items-center py-1 px-2 gap-2 bg-neutral-50/33 rounded-lg w-full">
+                <div class="flex flex-2 gap-2 items-center">
+                  <%- include("../icons/file.ejs") %>
+                  <span>file 1</span>
+                </div>
+
+              
+                <span class="flex-1">20-07-2025</span>
+                <span class="flex-1">my location</span>
+                <%- include("../icons/more.ejs") %>
+              </li>
+              <li class="flex items-center py-1 px-2 gap-2 bg-neutral-50/33 rounded-lg w-full">
+                <div class="flex flex-2 gap-2 items-center">
+                  <%- include("../icons/file.ejs") %>
+                  <span>file 1</span>
+                </div>
+
+              
+                <span class="flex-1">20-07-2025</span>
+                <span class="flex-1">my location</span>
+                <%- include("../icons/more.ejs") %>
+              </li>
+            </ul> -->
+
+<%- include("../partials/footer.ejs") %>

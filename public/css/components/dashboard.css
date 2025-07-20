@@ -1,0 +1,25 @@
+@layer components {
+  .dashboard {
+    @apply flex flex-col flex-auto min-h-0 py-8 px-10 gap-20;
+  }
+
+  .dashboard-heading {
+    @apply text-3xl font-semibold mb-5 capitalize;
+  }
+
+  .dashboard-list {
+    @apply flex flex-wrap mb-5;
+  }
+
+  .dashboard-folder-link {
+    @apply flex items-center gap-2 bg-neutral-50/33  rounded-lg px-2 py-1;
+  }
+
+  .dashboard-table-head {
+    @apply flex items-center text-left px-2 gap-2 rounded-lg;
+  }
+
+  .dashboard-table-row {
+    @apply flex items-center py-1 px-2 gap-2 bg-neutral-50/33 rounded-lg w-full;
+  }
+}
