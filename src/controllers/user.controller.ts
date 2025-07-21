@@ -1,12 +1,25 @@
 import { User } from "../../generated/prisma";
+import { getDashboardItems } from "../services/user.service";
 import { HandlerType } from "../types/handlers";
 
-const get_user_homepage: HandlerType = (req, res, next) => {
-  console.log(req.user);
+const get_user_dashboard: HandlerType = async (req, res, next) => {
+  // console.log(req.user);
+  // 1. get user data
   const user = req.user as User;
-  // User
-  // const user = req.user as User;
-  res.send(user.id);
+
+  try {
+    // 2. get files and folders
+    const [folders, files] = await getDashboardItems(user.id);
+
+    res.render("pages/userDashboard", {
+      title: "User Dashboard",
+      user: user,
+      folders: folders,
+      files: files,
+    });
+  } catch (err) {
+    next(err);
+  }
 };
 
-export default { get_user_homepage };
+export default { get_user_dashboard };

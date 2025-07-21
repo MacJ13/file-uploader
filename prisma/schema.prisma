@@ -28,6 +28,7 @@ model Folder {
   id Int @id @default(autoincrement())
   name String
   created_at DateTime @default(now())
+  visited_at DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId Int

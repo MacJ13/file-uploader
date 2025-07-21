@@ -44,7 +44,7 @@ const login_authenticate: HandlerType = async (req, res, next) => {
 
     await loginUser(req, user);
 
-    res.redirect(`/user/${user.id}`);
+    res.redirect(`/user/dashboard`);
   } catch (err) {
     return next(err);
   }

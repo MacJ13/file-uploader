@@ -48,6 +48,35 @@ export const saveUser = async (user: User) => {
   });
 };
 
+export const getDashboardItems = async (id: number) => {
+  const [files, folders] = await Promise.all([
+    await prisma.file.findMany({
+      where: { id: id },
+      select: {
+        name: true,
+        id: true,
+        created_at: true,
+        folder: { select: { name: true } },
+      },
+      orderBy: [{ created_at: "desc" }],
+      take: 7,
+    }),
+    await prisma.folder.findMany({
+      where: { id: id },
+      select: {
+        id: true,
+        name: true,
+      },
+      orderBy: {
+        visited_at: "desc",
+      },
+      take: 5,
+    }),
+  ]);
+
+  return [folders, files];
+};
+
 export const verifyUserPassword = (
   password: string,
   hash: string

@@ -6,6 +6,6 @@ const userRouter = Router();
 
 userRouter.use(redirectIfGuest);
 
-userRouter.get("/:userId", userController.get_user_homepage);
+userRouter.get("/dashboard", userController.get_user_dashboard);
 
 export default userRouter;

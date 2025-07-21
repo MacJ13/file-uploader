@@ -5,8 +5,7 @@ export const redirectIfAuthenticated: HandlerType = (req, res, next) => {
   const user = req.user;
 
   if (user) {
-    const loggedUser = user as User;
-    res.redirect(`/user/${loggedUser.id}`);
+    res.redirect(`/user/dashboard`);
     return;
   }
 
