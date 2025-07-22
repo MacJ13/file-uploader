@@ -10,6 +10,7 @@ import authRouter from "./routes/auth.router";
 import { sessionMiddleware } from "./config/session.config";
 import passport from "./config/passport.config";
 import userRouter from "./routes/user.router";
+import folderRouter from "./routes/folder.router";
 
 const app = express();
 
@@ -33,6 +34,7 @@ app.use(passport.session());
 app.use("/", homeRouter);
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
+app.use("/folder", folderRouter);
 
 app.use(notFound);
 app.use(handleError);
