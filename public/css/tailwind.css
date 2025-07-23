@@ -12,8 +12,6 @@
     --color-stone-50: oklch(98.5% 0.001 106.423);
     --color-stone-950: oklch(14.7% 0.004 49.25);
     --spacing: 0.25rem;
-    --container-md: 28rem;
-    --container-xl: 36rem;
     --container-2xl: 42rem;
     --text-xs: 0.75rem;
     --text-xs--line-height: calc(1 / 0.75);
@@ -291,23 +289,8 @@
   .max-w-2xl {
     max-width: var(--container-2xl);
   }
-  .max-w-3\/4 {
-    max-width: calc(3/4 * 100%);
-  }
-  .max-w-80 {
-    max-width: calc(var(--spacing) * 80);
-  }
   .max-w-96 {
     max-width: calc(var(--spacing) * 96);
-  }
-  .max-w-md {
-    max-width: var(--container-md);
-  }
-  .max-w-xl {
-    max-width: var(--container-xl);
-  }
-  .min-w-80 {
-    min-width: calc(var(--spacing) * 80);
   }
   .flex-1 {
     flex: 1;

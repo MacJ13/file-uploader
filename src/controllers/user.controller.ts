@@ -10,7 +10,6 @@ const get_user_dashboard: HandlerType = async (req, res, next) => {
   try {
     // 2. get files and folders
     const [folders, files] = await getDashboardItems(user.id);
-
     res.render("pages/userDashboard", {
       title: "User Dashboard",
       user: user,

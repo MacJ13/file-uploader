@@ -1,11 +1,20 @@
 import { Router } from "express";
 import folderController from "../controllers/folder.controller";
 import { redirectIfGuest } from "../middlewares/redirectAuth";
+import { folderValidation } from "../middlewares/validators/folderValidators";
+import { handleValidation } from "../middlewares/handleValidation";
 
 const folderRouter = Router();
 
 folderRouter.use(redirectIfGuest);
 
 folderRouter.get("/create", folderController.create_folder_get);
+
+folderRouter.post(
+  "/create",
+  folderValidation,
+  handleValidation({ view: "pages/folderForm", title: "Create new account" }),
+  folderController.create_folder_post
+);
 
 export default folderRouter;

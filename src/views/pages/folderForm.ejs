@@ -16,6 +16,9 @@
         <div class="form-field form-field-last">
           <button class="form-button" type="submit">login</button>
         </div>
+        <% if(locals.errors) { %>
+          <%- include("../partials/errorFields.ejs") %>
+        <% } %>
       </form>
     </div>
   </div>

@@ -48,10 +48,10 @@ export const saveUser = async (user: User) => {
   });
 };
 
-export const getDashboardItems = async (id: number) => {
+export const getDashboardItems = async (userId: number) => {
   const [files, folders] = await Promise.all([
     await prisma.file.findMany({
-      where: { id: id },
+      where: { userId: userId },
       select: {
         name: true,
         id: true,
@@ -62,10 +62,11 @@ export const getDashboardItems = async (id: number) => {
       take: 7,
     }),
     await prisma.folder.findMany({
-      where: { id: id },
+      where: { userId: userId },
       select: {
         id: true,
         name: true,
+        parentFolder: true,
       },
       orderBy: {
         visited_at: "desc",

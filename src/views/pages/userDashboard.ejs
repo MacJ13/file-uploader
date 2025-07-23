@@ -12,9 +12,9 @@
             <% if(locals.folders.length) { %>
               <ul class="dashboard-list gap-8">
                 <% locals.folders.forEach(folder => { %>
-                  <a href="#" class="dashboard-folder-link">
+                  <a href="/folder/<%= folder.id %>" class="dashboard-folder-link">
                     <%- include("../icons/folder.ejs") %>
-                    <span>folder 5</span>
+                    <span><%= folder.name %></span>
                   </a>
                 <% }); %>
               </ul>
