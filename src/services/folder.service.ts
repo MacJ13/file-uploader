@@ -13,3 +13,16 @@ export const createFolder = async (
     },
   });
 };
+
+export const getUserFolders = async (
+  userId: number,
+  parentFolderId?: number
+) => {
+  const folders = await prisma.folder.findMany({
+    where: { userId: userId, parentFolderId: parentFolderId ?? null },
+    select: { id: true, name: true, parentFolderId: true, created_at: true },
+    orderBy: { created_at: "desc" },
+  });
+
+  return folders;
+};

@@ -18,7 +18,7 @@
                   </a>
                 <% }); %>
               </ul>
-              <a href="#">show all folders >></a>
+              <a href="/folder/all">show all folders >></a>
             <% } else { %>
               <em>there is no folders. <u><a href="/folder/create">add new folder</a></u></em>
             <% } %>
@@ -67,7 +67,7 @@
                   </tr>
                 </thead>
                 <tbody class="w-full flex flex-col gap-8">
-                  <% locals.files.forEach(files => { %>
+                  <% locals.files.forEach(file => { %>
                     <tr class="dashboard-table-row">
                       <td class="flex flex-2 gap-2 items-center">
                         <%- include("../icons/file.ejs") %>

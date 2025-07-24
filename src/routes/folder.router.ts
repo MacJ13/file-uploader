@@ -17,4 +17,6 @@ folderRouter.post(
   folderController.create_folder_post
 );
 
+folderRouter.get("/all", folderController.folder_list);
+
 export default folderRouter;
