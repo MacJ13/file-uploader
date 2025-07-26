@@ -7,11 +7,12 @@
   <div class="flex-1 flex min-h-0 w-full">
     <%- include("../partials/sidebar.ejs") %>
     <div class="mt-5 mx-auto w-full px-10">
-      <h1 class="text-4xl text-center font-bold mb-4 uppercase">user folders</h1>
- 
-
+      <div class="flex justify-between w-full">
+        <h1 class="text-4xl font-bold mb-4 uppercase">user folders</h1>
+        <%- include("../partials/folderListForm.ejs") %>
+      </div>
       <% if(locals.folders) { %>
-         <table class="dashboard-list gap-5">
+        <table class="dashboard-list gap-5">
           <thead class="w-full">
             <tr class="dashboard-table-head">
               <th class="flex flex-2 gap-2 items-center">
@@ -38,10 +39,10 @@
                     </tr>
             <% }); %>
           </tbody>
-         </table>
-      <% } %>    
-
-      
+        </table>
+      <% } else { %>
+        <em>there is no folders. >add new folder</em>
+      <% } %>  
     </div>
   </div>
 </main>  

@@ -9,6 +9,7 @@
       "Courier New", monospace;
     --color-gray-100: oklch(96.7% 0.003 264.542);
     --color-neutral-50: oklch(98.5% 0 0);
+    --color-neutral-200: oklch(92.2% 0 0);
     --color-stone-50: oklch(98.5% 0.001 106.423);
     --color-stone-950: oklch(14.7% 0.004 49.25);
     --spacing: 0.25rem;
@@ -283,6 +284,9 @@
   .w-8 {
     width: calc(var(--spacing) * 8);
   }
+  .w-auto {
+    width: auto;
+  }
   .w-full {
     width: 100%;
   }
@@ -301,11 +305,23 @@
   .transform {
     transform: var(--tw-rotate-x,) var(--tw-rotate-y,) var(--tw-rotate-z,) var(--tw-skew-x,) var(--tw-skew-y,);
   }
+  .list-inside {
+    list-style-position: inside;
+  }
+  .list-disc {
+    list-style-type: disc;
+  }
   .flex-col {
     flex-direction: column;
   }
+  .flex-row {
+    flex-direction: row;
+  }
   .items-center {
     align-items: center;
+  }
+  .justify-between {
+    justify-content: space-between;
   }
   .justify-center {
     justify-content: center;
@@ -318,6 +334,9 @@
   }
   .gap-8 {
     gap: calc(var(--spacing) * 8);
+  }
+  .overflow-hidden {
+    overflow: hidden;
   }
   .rounded-lg {
     border-radius: var(--radius-lg);
@@ -337,6 +356,9 @@
     @supports (color: color-mix(in lab, red, red)) {
       background-color: color-mix(in oklab, var(--color-neutral-50) 33%, transparent);
     }
+  }
+  .bg-neutral-200 {
+    background-color: var(--color-neutral-200);
   }
   .px-2 {
     padding-inline: calc(var(--spacing) * 2);

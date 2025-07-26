@@ -19,4 +19,10 @@ folderRouter.post(
 
 folderRouter.get("/all", folderController.folder_list);
 
+folderRouter.post(
+  "/all",
+  folderValidation,
+  folderController.add_folder_in_list
+);
+
 export default folderRouter;

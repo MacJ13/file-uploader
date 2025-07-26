@@ -1,0 +1,16 @@
+<form class="form-box w-auto gap-5" method="post" action= "<%= locals.action ? locals.action : '/folder/all' %>">
+  <div class="flex flex-row items-center gap-5">
+    <h2 class="text-lg font-bold uppercase">add new folder</h2>
+    <div class="flex rounded-lg overflow-hidden">
+      <input id="title" type="text" name="title" value="<%= locals.data ? data.title : '' %>" class="form-input" />    
+      <button class="form-button font-bold bg-neutral-200" type="submit">create</button>
+    </div>
+  </div>
+  <% if(locals.errors) { %>
+    <ul class="list-disc list-inside">
+    <% locals.errors.forEach(error => { %>       
+      <li><%= error %></li>
+    <% }) %>
+    </ul>
+  <% } %>
+</form>    
