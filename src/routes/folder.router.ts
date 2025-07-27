@@ -25,4 +25,6 @@ folderRouter.post(
   folderController.add_folder_in_list
 );
 
+folderRouter.get("/:folderId", folderController.folder_detail_get);
+
 export default folderRouter;

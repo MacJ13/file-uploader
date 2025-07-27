@@ -1,6 +1,10 @@
 import { HandlerType } from "../types/handlers";
 import { User } from "../../generated/prisma";
-import { createFolder, getUserFolders } from "../services/folder.service";
+import {
+  createFolder,
+  getFolderById,
+  getUserFolders,
+} from "../services/folder.service";
 import { validationResult } from "express-validator";
 import { getValidationErrorMessages } from "../utils/errors/getValidationErrorMessages";
 
@@ -72,9 +76,26 @@ const add_folder_in_list: HandlerType = async (req, res, next) => {
   }
 };
 
+const folder_detail_get: HandlerType = async (req, res, next) => {
+  try {
+    const { folderId } = req.params;
+
+    const folder = await getFolderById(+folderId);
+    console.log(folder);
+    res.render("pages/folderDetail", {
+      title: "folder detail",
+      folders: folder?.subfolders,
+      files: folder?.files,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 export default {
   create_folder_get,
   create_folder_post,
   folder_list,
   add_folder_in_list,
+  folder_detail_get,
 };

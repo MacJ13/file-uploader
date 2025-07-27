@@ -1,0 +1,70 @@
+<%- include("../partials/head.ejs") %>
+<!-- <body class="bg-gray-100 flex items-center justify-center h-screen"></body> -->
+ <%- include("../partials/navigation.ejs") %>
+<body class="body">
+
+<main class="main py-8">
+  <div class="flex-1 flex min-h-0 w-full">
+    <%- include("../partials/sidebar.ejs") %>
+    <div class="mt-5 mx-auto w-full px-10">
+      <div class="flex justify-between w-full">
+        <h1 class="text-4xl font-bold mb-4 uppercase">folder's name</h1>
+        <%- include("../partials/folderListForm.ejs") %>
+      </div>
+      <% if(locals.folders.length || locals.files.length) { %>
+        <table class="dashboard-list gap-5">
+          <thead class="w-full">
+            <tr class="dashboard-table-head">
+              <th class="flex flex-2 gap-2 items-center">
+                name:
+              </th>
+              <th class="flex-1">created at:</th>
+              <th class="h-5 w-5">&nbsp;</th>
+            </tr>
+          </thead> 
+          <tbody class="w-full flex flex-col gap-8">
+            <% locals.folders.forEach(folder => { %>
+                <tr class="dashboard-table-row">
+                      <td class="flex-2 ">
+                        <a class="flex gap-2 items-center" href="/folder/<%= folder.id %>">
+                          <%- include("../icons/folder.ejs") %>
+                          <span><%= folder.name %></span>
+                        </a>
+                      </td>
+                      <td class="flex-1"><%= new Date(folder.created_at).toLocaleString(); %></td>
+                    
+                      <td>
+                        <%- include("../icons/more.ejs") %>
+                      </td>            
+                    </tr>
+            <% }); %>
+            <% locals.files.forEach(file => { %>
+                <tr class="dashboard-table-row">
+                      <td class="flex-2 ">
+                         <div class="flex gap-2 items-center">
+                    <%- include("../icons/file.ejs") %>
+                          <span><%= folder.name %></span>
+                         </div>
+                        <a class="flex gap-2 items-center" href="/folder/<%= folder.id %>">
+                          <%- include("../icons/file.ejs") %>
+                          <span><%= folder.name %></span>
+                        </a>
+                      </td>
+                      <td class="flex-1"><%= new Date(folder.created_at).toLocaleString(); %></td>
+                    
+                      <td>
+                        <%- include("../icons/more.ejs") %>
+                      </td>            
+                    </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      <% }  else { %>
+        <em>there is no items. add new folder or file</em>
+      <% } %>  
+    </div>
+  </div>
+</main>  
+</body>
+
+<%- include("../partials/footer.ejs") %>

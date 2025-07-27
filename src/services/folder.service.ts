@@ -26,3 +26,24 @@ export const getUserFolders = async (
 
   return folders;
 };
+
+export const getFolderById = async (id: number) => {
+  const folder = await prisma.folder.findUnique({
+    where: { id: id },
+    select: {
+      id: true,
+      name: true,
+      parentFolder: { select: { id: true, name: true } },
+      subfolders: {
+        select: { id: true, name: true, created_at: true },
+        orderBy: { created_at: "desc" },
+      },
+      files: {
+        select: { id: true, name: true, created_at: true },
+        orderBy: { created_at: "desc" },
+      },
+    },
+  });
+
+  return folder;
+};
