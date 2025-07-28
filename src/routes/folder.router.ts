@@ -20,6 +20,12 @@ folderRouter.post(
 folderRouter.get("/all", folderController.folder_list);
 
 folderRouter.post(
+  "/:folderId",
+  folderValidation,
+  folderController.add_folder_in_list
+);
+
+folderRouter.post(
   "/all",
   folderValidation,
   folderController.add_folder_in_list

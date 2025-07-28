@@ -4,9 +4,11 @@ import {
   createFolder,
   getFolderById,
   getUserFolders,
+  updateFolderVisitedDate,
 } from "../services/folder.service";
 import { validationResult } from "express-validator";
 import { getValidationErrorMessages } from "../utils/errors/getValidationErrorMessages";
+import { getParentLink } from "../utils/helpers/getParentLink";
 
 const create_folder_get: HandlerType = (req, res, next) => {
   const user = req.user;
@@ -67,7 +69,6 @@ const add_folder_in_list: HandlerType = async (req, res, next) => {
     }
 
     const folderTitle = folderData.title;
-
     await createFolder(folderTitle, user.id, folderId);
     console.log("folder is created in folder list");
     res.redirect(req.originalUrl);
@@ -80,11 +81,15 @@ const folder_detail_get: HandlerType = async (req, res, next) => {
   try {
     const { folderId } = req.params;
 
+    const formAction = req.originalUrl;
+
     const folder = await getFolderById(+folderId);
 
-    const link = folder?.parentFolder
-      ? `/folder/${folder.parentFolder.id}`
-      : "/folder/all";
+    if (folder) {
+      await updateFolderVisitedDate(+folderId);
+    }
+
+    const link = getParentLink(folder?.parentFolder);
     // console.log(folder);
     res.render("pages/folderDetail", {
       folder: folder,
@@ -92,6 +97,7 @@ const folder_detail_get: HandlerType = async (req, res, next) => {
       folders: folder?.subfolders,
       files: folder?.files,
       backLink: link,
+      action: formAction,
     });
   } catch (err) {
     next(err);

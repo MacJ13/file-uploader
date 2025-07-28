@@ -16,7 +16,7 @@ export const createFolder = async (
 
 export const getUserFolders = async (
   userId: number,
-  parentFolderId?: number | null
+  parentFolderId: number | null = null
 ) => {
   const folders = await prisma.folder.findMany({
     where: { userId: userId, parentFolderId: parentFolderId },
@@ -46,4 +46,11 @@ export const getFolderById = async (id: number) => {
   });
 
   return folder;
+};
+
+export const updateFolderVisitedDate = async (id: number) => {
+  await prisma.folder.update({
+    where: { id: id },
+    data: { visited_at: new Date() },
+  });
 };
