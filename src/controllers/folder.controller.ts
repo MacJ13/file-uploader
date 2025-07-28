@@ -81,11 +81,17 @@ const folder_detail_get: HandlerType = async (req, res, next) => {
     const { folderId } = req.params;
 
     const folder = await getFolderById(+folderId);
-    console.log(folder);
+
+    const link = folder?.parentFolder
+      ? `/folder/${folder.parentFolder.id}`
+      : "/folder/all";
+    // console.log(folder);
     res.render("pages/folderDetail", {
+      folder: folder,
       title: "folder detail",
       folders: folder?.subfolders,
       files: folder?.files,
+      backLink: link,
     });
   } catch (err) {
     next(err);

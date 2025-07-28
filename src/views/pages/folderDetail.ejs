@@ -8,7 +8,14 @@
     <%- include("../partials/sidebar.ejs") %>
     <div class="mt-5 mx-auto w-full px-10">
       <div class="flex justify-between w-full">
-        <h1 class="text-4xl font-bold mb-4 uppercase">folder's name</h1>
+        <div class="flex flex-row items-center gap-5">
+           <a href="<%= locals.backLink %>">
+            <%- include("../icons/backArrow.ejs") %> 
+           </a> 
+           
+           <h1 class="text-4xl font-bold uppercase"><%= locals.folder.name %></h1>
+        </div>
+       
         <%- include("../partials/folderListForm.ejs") %>
       </div>
       <% if(locals.folders.length || locals.files.length) { %>
