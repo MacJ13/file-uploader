@@ -7,11 +7,15 @@
       "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
       "Courier New", monospace;
+    --color-red-800: oklch(44.4% 0.177 26.899);
     --color-gray-100: oklch(96.7% 0.003 264.542);
     --color-neutral-50: oklch(98.5% 0 0);
     --color-neutral-200: oklch(92.2% 0 0);
     --color-stone-50: oklch(98.5% 0.001 106.423);
+    --color-stone-300: oklch(86.9% 0.005 56.366);
+    --color-stone-500: oklch(55.3% 0.013 58.071);
     --color-stone-950: oklch(14.7% 0.004 49.25);
+    --color-black: #000;
     --spacing: 0.25rem;
     --container-2xl: 42rem;
     --text-xs: 0.75rem;
@@ -239,8 +243,17 @@
   }
 }
 @layer utilities {
+  .absolute {
+    position: absolute;
+  }
   .relative {
     position: relative;
+  }
+  .-left-10 {
+    left: calc(var(--spacing) * -10);
+  }
+  .z-5 {
+    z-index: 5;
   }
   .m-auto {
     margin: auto;
@@ -259,6 +272,12 @@
   }
   .flex {
     display: flex;
+  }
+  .hidden {
+    display: none;
+  }
+  .table {
+    display: table;
   }
   .h-5 {
     height: calc(var(--spacing) * 5);
@@ -305,6 +324,9 @@
   .transform {
     transform: var(--tw-rotate-x,) var(--tw-rotate-y,) var(--tw-rotate-z,) var(--tw-skew-x,) var(--tw-skew-y,);
   }
+  .cursor-pointer {
+    cursor: pointer;
+  }
   .list-inside {
     list-style-position: inside;
   }
@@ -329,6 +351,9 @@
   .gap-2 {
     gap: calc(var(--spacing) * 2);
   }
+  .gap-3 {
+    gap: calc(var(--spacing) * 3);
+  }
   .gap-5 {
     gap: calc(var(--spacing) * 5);
   }
@@ -337,6 +362,9 @@
   }
   .overflow-hidden {
     overflow: hidden;
+  }
+  .rounded {
+    border-radius: 0.25rem;
   }
   .rounded-lg {
     border-radius: var(--radius-lg);
@@ -351,6 +379,9 @@
   .bg-gray-100 {
     background-color: var(--color-gray-100);
   }
+  .bg-neutral-50 {
+    background-color: var(--color-neutral-50);
+  }
   .bg-neutral-50\/33 {
     background-color: color-mix(in srgb, oklch(98.5% 0 0) 33%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
@@ -359,6 +390,15 @@
   }
   .bg-neutral-200 {
     background-color: var(--color-neutral-200);
+  }
+  .bg-stone-50 {
+    background-color: var(--color-stone-50);
+  }
+  .bg-stone-300 {
+    background-color: var(--color-stone-300);
+  }
+  .bg-stone-500 {
+    background-color: var(--color-stone-500);
   }
   .px-2 {
     padding-inline: calc(var(--spacing) * 2);
@@ -372,11 +412,20 @@
   .py-1 {
     padding-block: calc(var(--spacing) * 1);
   }
+  .py-2 {
+    padding-block: calc(var(--spacing) * 2);
+  }
   .py-4 {
     padding-block: calc(var(--spacing) * 4);
   }
   .py-8 {
     padding-block: calc(var(--spacing) * 8);
+  }
+  .pr-4 {
+    padding-right: calc(var(--spacing) * 4);
+  }
+  .pl-4 {
+    padding-left: calc(var(--spacing) * 4);
   }
   .text-center {
     text-align: center;
@@ -396,6 +445,12 @@
   .font-semibold {
     --tw-font-weight: var(--font-weight-semibold);
     font-weight: var(--font-weight-semibold);
+  }
+  .text-black {
+    color: var(--color-black);
+  }
+  .text-red-800 {
+    color: var(--color-red-800);
   }
   .uppercase {
     text-transform: uppercase;

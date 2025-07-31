@@ -24,7 +24,7 @@ const create_folder_post: HandlerType = async (req, res, next) => {
   try {
     await createFolder(title, userId);
 
-    res.redirect("/user/dashboard");
+    res.redirect("/folder/all");
   } catch (err) {
     next(err);
   }
@@ -79,6 +79,7 @@ const add_folder_in_list: HandlerType = async (req, res, next) => {
 
 const folder_detail_get: HandlerType = async (req, res, next) => {
   try {
+    const user = req.user;
     const { folderId } = req.params;
 
     const formAction = req.originalUrl;
@@ -92,6 +93,7 @@ const folder_detail_get: HandlerType = async (req, res, next) => {
     const link = getParentLink(folder?.parentFolder);
     // console.log(folder);
     res.render("pages/folderDetail", {
+      user: user,
       folder: folder,
       title: "folder detail",
       folders: folder?.subfolders,
