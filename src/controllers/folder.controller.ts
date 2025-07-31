@@ -3,6 +3,7 @@ import { User } from "../../generated/prisma";
 import {
   createFolder,
   getFolderById,
+  getFolderName,
   getUserFolders,
   updateFolderVisitedDate,
 } from "../services/folder.service";
@@ -106,10 +107,26 @@ const folder_detail_get: HandlerType = async (req, res, next) => {
   }
 };
 
+const folder_update_get: HandlerType = async (req, res, next) => {
+  const user = req.user;
+  const folderId = req.params.folderId;
+
+  const folderName = await getFolderName(+folderId);
+
+  const data = { title: folderName };
+
+  res.render("pages/folderForm", {
+    user: user,
+    title: "update folder",
+    data,
+  });
+};
+
 export default {
   create_folder_get,
   create_folder_post,
   folder_list,
   add_folder_in_list,
   folder_detail_get,
+  folder_update_get,
 };

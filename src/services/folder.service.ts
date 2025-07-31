@@ -54,3 +54,12 @@ export const updateFolderVisitedDate = async (id: number) => {
     data: { visited_at: new Date() },
   });
 };
+
+export const getFolderName = async (id: number) => {
+  const folder = await prisma.folder.findUnique({
+    where: { id: id },
+    select: { name: true },
+  });
+
+  return folder?.name;
+};

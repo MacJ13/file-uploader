@@ -33,4 +33,6 @@ folderRouter.post(
 
 folderRouter.get("/:folderId", folderController.folder_detail_get);
 
+folderRouter.get("/:folderId/update", folderController.folder_update_get);
+
 export default folderRouter;
