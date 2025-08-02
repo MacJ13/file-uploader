@@ -42,4 +42,6 @@ folderRouter.post(
   folderController.folder_update_post
 );
 
+folderRouter.get("/:folderId/delete", folderController.folder_delete_get);
+
 export default folderRouter;

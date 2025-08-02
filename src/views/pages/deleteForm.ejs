@@ -1,0 +1,28 @@
+<%- include("../partials/head.ejs") %>
+<!-- <body class="bg-gray-100 flex items-center justify-center h-screen"></body> -->
+ <%- include("../partials/navigation.ejs") %>
+<body class="body">
+
+<main class="main py-8">
+  <div class="flex-1 flex min-h-0 w-full">
+    <%- include("../partials/sidebar.ejs") %>
+    <div class="mt-5 mx-auto w-full max-w-2xl px-10">
+      <h1 class="text-4xl text-center font-bold mb-4 uppercase"><%= locals.title %></h1>
+      <form class="form-box" method="post" action="<%= locals.action %>">
+        <div class="form-field">
+          <label for="password" class="form-label">Password</label>
+          <input id="password" type="password" name="password" value="<%= locals.data ? locals.data.password : '' %>" class="form-input" />
+        </div>  
+        <div class="form-field form-field-last">
+          <button class="form-button" type="submit">delete</button>
+        </div>
+        <% if(locals.errors) { %>
+          <%- include("../partials/errorFields.ejs") %>
+        <% } %>
+      </form>
+    </div>
+  </div>
+</main> 
+</body>
+
+<%- include("../partials/footer.ejs") %>

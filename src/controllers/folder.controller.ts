@@ -138,6 +138,12 @@ const folder_update_post: HandlerType = async (req, res, next) => {
   }
 };
 
+const folder_delete_get: HandlerType = async (req, res, next) => {
+  const user = req.user;
+
+  res.render("pages/deleteForm", { user: user, title: "Delete folder" });
+};
+
 export default {
   create_folder_get,
   create_folder_post,
@@ -146,4 +152,5 @@ export default {
   folder_detail_get,
   folder_update_get,
   folder_update_post,
+  folder_delete_get,
 };
