@@ -12,7 +12,6 @@
     --color-neutral-50: oklch(98.5% 0 0);
     --color-neutral-200: oklch(92.2% 0 0);
     --color-stone-50: oklch(98.5% 0.001 106.423);
-    --color-stone-300: oklch(86.9% 0.005 56.366);
     --color-stone-500: oklch(55.3% 0.013 58.071);
     --color-stone-950: oklch(14.7% 0.004 49.25);
     --color-black: #000;
@@ -390,12 +389,6 @@
   }
   .bg-neutral-200 {
     background-color: var(--color-neutral-200);
-  }
-  .bg-stone-50 {
-    background-color: var(--color-stone-50);
-  }
-  .bg-stone-300 {
-    background-color: var(--color-stone-300);
   }
   .bg-stone-500 {
     background-color: var(--color-stone-500);

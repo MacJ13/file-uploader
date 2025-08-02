@@ -5,6 +5,7 @@ import {
   getFolderById,
   getFolderName,
   getUserFolders,
+  updateFolderName,
   updateFolderVisitedDate,
 } from "../services/folder.service";
 import { validationResult } from "express-validator";
@@ -122,6 +123,21 @@ const folder_update_get: HandlerType = async (req, res, next) => {
   });
 };
 
+const folder_update_post: HandlerType = async (req, res, next) => {
+  // 1. get folderId and  title from form filed of reques
+  const title = req.body.title;
+  const folderId = +req.params.folderId;
+
+  try {
+    // 2. update folder title in db
+    await updateFolderName(title, folderId);
+    // 3. redirect to given specific folder
+    res.redirect(`/folder/${folderId}`);
+  } catch (err) {
+    next(err);
+  }
+};
+
 export default {
   create_folder_get,
   create_folder_post,
@@ -129,4 +145,5 @@ export default {
   add_folder_in_list,
   folder_detail_get,
   folder_update_get,
+  folder_update_post,
 };

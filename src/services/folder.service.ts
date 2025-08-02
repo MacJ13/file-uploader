@@ -63,3 +63,10 @@ export const getFolderName = async (id: number) => {
 
   return folder?.name;
 };
+
+export const updateFolderName = async (folderName: string, id: number) => {
+  await prisma.folder.update({
+    where: { id: id },
+    data: { name: folderName },
+  });
+};

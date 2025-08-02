@@ -35,4 +35,11 @@ folderRouter.get("/:folderId", folderController.folder_detail_get);
 
 folderRouter.get("/:folderId/update", folderController.folder_update_get);
 
+folderRouter.post(
+  "/:folderId/update",
+  folderValidation,
+  handleValidation({ view: "pages/folderForm", title: "Update Folder" }),
+  folderController.folder_update_post
+);
+
 export default folderRouter;

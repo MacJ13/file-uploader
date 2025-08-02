@@ -13,7 +13,12 @@ export const handleValidation = ({
     if (!errorResult.isEmpty()) {
       const errors = getValidationErrorMessages(errorResult.array());
 
-      res.render(view, { title: title, errors: errors, data: fieldsData });
+      res.render(view, {
+        title: title,
+        errors: errors,
+        data: fieldsData,
+        action: req.originalUrl,
+      });
       return;
     }
 
