@@ -65,3 +65,12 @@ export const loginValidation = [
     .withMessage("No spaces are allowed in the password")
     .escape(),
 ];
+
+export const passwordValidation = body("password")
+  .notEmpty()
+  .withMessage("password must not by empty")
+  .isLength({ min: 8 })
+  .withMessage("password must contain at least 8 letters")
+  .custom((value) => !/\s/.test(value))
+  .withMessage("No spaces are allowed in the password")
+  .escape();

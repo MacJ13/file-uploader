@@ -3,6 +3,7 @@ import folderController from "../controllers/folder.controller";
 import { redirectIfGuest } from "../middlewares/redirectAuth";
 import { folderValidation } from "../middlewares/validators/folderValidators";
 import { handleValidation } from "../middlewares/handleValidation";
+import { passwordValidation } from "../middlewares/validators/authValidators";
 
 const folderRouter = Router();
 
@@ -43,5 +44,12 @@ folderRouter.post(
 );
 
 folderRouter.get("/:folderId/delete", folderController.folder_delete_get);
+
+folderRouter.post(
+  "/:folderId/delete",
+  passwordValidation,
+  handleValidation({ view: "pages/deleteForm", title: "Delete folder" }),
+  folderController.folder_delete_post
+);
 
 export default folderRouter;

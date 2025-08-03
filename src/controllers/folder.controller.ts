@@ -2,8 +2,10 @@ import { HandlerType } from "../types/handlers";
 import { User } from "../../generated/prisma";
 import {
   createFolder,
+  deleteFolder,
   getFolderById,
   getFolderName,
+  getParentFolder,
   getUserFolders,
   updateFolderName,
   updateFolderVisitedDate,
@@ -11,6 +13,8 @@ import {
 import { validationResult } from "express-validator";
 import { getValidationErrorMessages } from "../utils/errors/getValidationErrorMessages";
 import { getParentLink } from "../utils/helpers/getParentLink";
+import { verifyUserPassword } from "../services/user.service";
+import { getRedirectUrlForFolder } from "../utils/helpers/getRedirectUrlForFolder";
 
 const create_folder_get: HandlerType = (req, res, next) => {
   const user = req.user;
@@ -141,7 +145,41 @@ const folder_update_post: HandlerType = async (req, res, next) => {
 const folder_delete_get: HandlerType = async (req, res, next) => {
   const user = req.user;
 
-  res.render("pages/deleteForm", { user: user, title: "Delete folder" });
+  res.render("pages/deleteForm", {
+    user: user,
+    title: "Delete folder",
+    action: req.originalUrl,
+  });
+};
+
+const folder_delete_post: HandlerType = async (req, res, next) => {
+  const folderId = req.params.folderId;
+
+  const password = req.body.password;
+  const user = req.user as User;
+
+  try {
+    const correctPassword = await verifyUserPassword(password, user.password);
+
+    if (!correctPassword) {
+      res.render("pages/deleteForm", {
+        user: user,
+        title: "Delete Folder",
+        data: { password: password },
+        errors: ["user password is incorrect"],
+        action: req.originalUrl,
+      });
+      return;
+    }
+
+    const deletedFolder = await deleteFolder(+folderId);
+
+    const redirectUrl = getRedirectUrlForFolder(deletedFolder.id);
+
+    res.redirect(redirectUrl);
+  } catch (err) {
+    next(err);
+  }
 };
 
 export default {
@@ -153,4 +191,5 @@ export default {
   folder_update_get,
   folder_update_post,
   folder_delete_get,
+  folder_delete_post,
 };

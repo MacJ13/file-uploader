@@ -70,3 +70,16 @@ export const updateFolderName = async (folderName: string, id: number) => {
     data: { name: folderName },
   });
 };
+
+export const getParentFolder = async (id: number) => {
+  const folder = await prisma.folder.findUnique({
+    where: { id: id },
+    select: { parentFolder: { select: { id: true, name: true } } },
+  });
+
+  return folder ? folder.parentFolder : null;
+};
+
+export const deleteFolder = async (id: number) => {
+  return await prisma.folder.delete({ where: { id: id } });
+};
