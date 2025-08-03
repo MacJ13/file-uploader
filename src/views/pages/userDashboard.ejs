@@ -8,7 +8,12 @@
         <%- include("../partials/sidebar.ejs") %>
         <div class="dashboard">
           <div class="w-full">
-            <h2 class="dashboard-heading">last viewed folders:</h2>
+            <div class="dashboard-heading">
+               <a href="/folder/create">
+                <%- include("../icons/addItem.ejs") %>
+              </a>
+              <h2>last viewed folders:</h2>
+            </div>
             <% if(locals.folders.length) { %>
               <ul class="dashboard-list gap-8">
                 <% locals.folders.forEach(folder => { %>
@@ -53,7 +58,12 @@
 
           </div>
           <div class="flex flex-col">
-            <h2 class="dashboard-heading">last added files:</h2>
+            <div class="dashboard-heading">
+               <a href="/file/upload">
+                <%- include("../icons/addItem.ejs") %>
+              </a>
+              <h2>last added files:</h2>
+            </div>
             <% if(locals.files.length) { %>
               <table class="dashboard-list gap-5">
                 <thead class="w-full">
