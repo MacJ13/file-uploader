@@ -21,8 +21,9 @@
               <%- include("../icons/upload.ejs") %>
               upload file
             </label>
+            <input type="hidden" id="folderId" name="folderId" value="<%= locals.folder ? locals.folder.id : null %>" />
             <input class="hidden" type="file" id="file" name="file"/>
-            
+            <button class="form-button font-bold bg-neutral-200" type="submit">upload</button>
           </form>
          
           <%- include("../partials/folderListForm.ejs") %>

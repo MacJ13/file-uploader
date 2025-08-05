@@ -15,7 +15,6 @@
     --color-stone-500: oklch(55.3% 0.013 58.071);
     --color-stone-950: oklch(14.7% 0.004 49.25);
     --color-black: #000;
-    --color-white: #fff;
     --spacing: 0.25rem;
     --container-2xl: 42rem;
     --text-xs: 0.75rem;
@@ -366,9 +365,6 @@
   .gap-3 {
     gap: calc(var(--spacing) * 3);
   }
-  .gap-4 {
-    gap: calc(var(--spacing) * 4);
-  }
   .gap-5 {
     gap: calc(var(--spacing) * 5);
   }
@@ -387,13 +383,6 @@
   .border-t {
     border-top-style: var(--tw-border-style);
     border-top-width: 1px;
-  }
-  .border-r {
-    border-right-style: var(--tw-border-style);
-    border-right-width: 1px;
-  }
-  .border-white {
-    border-color: var(--color-white);
   }
   .border-t-stone-50 {
     border-top-color: var(--color-stone-50);
