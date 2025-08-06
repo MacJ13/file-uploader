@@ -39,7 +39,12 @@ export const getFolderById = async (id: number) => {
         orderBy: { created_at: "desc" },
       },
       files: {
-        select: { id: true, name: true, created_at: true },
+        select: {
+          id: true,
+          name: true,
+          created_at: true,
+          folder: { select: { name: true } },
+        },
         orderBy: { created_at: "desc" },
       },
     },

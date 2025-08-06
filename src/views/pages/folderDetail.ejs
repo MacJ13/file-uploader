@@ -61,16 +61,12 @@
             <% locals.files.forEach(file => { %>
                 <tr class="dashboard-table-row">
                       <td class="flex-2 ">
-                         <div class="flex gap-2 items-center">
-                    <%- include("../icons/file.ejs") %>
-                          <span><%= folder.name %></span>
-                         </div>
-                        <a class="flex gap-2 items-center" href="/folder/<%= folder.id %>">
+                        <a class="flex gap-2 items-center" href="/file/<%= file.id %>">
                           <%- include("../icons/file.ejs") %>
-                          <span><%= folder.name %></span>
+                          <span><%= file.name %></span>
                         </a>
                       </td>
-                      <td class="flex-1"><%= new Date(folder.created_at).toLocaleString(); %></td>
+                      <td class="flex-1"><%= new Date(file.created_at).toLocaleString(); %></td>
                     
                       <td>
                         <%- include("../icons/more.ejs") %>

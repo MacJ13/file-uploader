@@ -1,6 +1,8 @@
 import path from "path";
 import fs from "fs/promises";
 import { getFolderName } from "./folder.service";
+import { Multer } from "multer";
+import prisma from "../config/prisma.config";
 
 export const resolveUploadPath = async (username: string, folderId: number) => {
   // 1. get folder name
@@ -14,4 +16,23 @@ export const resolveUploadPath = async (username: string, folderId: number) => {
 
   // 4. return path
   return filePath;
+};
+
+export const saveFileToDB = async (
+  file: Express.Multer.File | undefined,
+  userId: number,
+  folderId: number | null = null
+) => {
+  if (!file) return;
+
+  await prisma.file.create({
+    data: {
+      name: file.originalname,
+      path: file.path,
+      size: file.size,
+      type: file.mimetype,
+      userId: userId,
+      folderId: folderId,
+    },
+  });
 };
