@@ -5,12 +5,17 @@ import { HandlerType } from "../types/handlers";
 const upload_file_post: HandlerType = async (req, res, next) => {
   try {
     const userId = (req.user as User).id;
-    const folderId = req.body.folderId;
+    const folderId = req.body.folderId ? +req.body.folderId : null;
     const file = req.file;
 
-    await saveFileToDB(file, +userId, +folderId);
+    await saveFileToDB(file, +userId, folderId);
 
-    res.redirect(`/folder/${folderId}`);
+    let redirectURL = "/user/dashboard";
+    if (folderId) {
+      redirectURL = `/folder/${folderId}`;
+    }
+
+    res.redirect(redirectURL);
   } catch (err) {
     next(err);
   }
