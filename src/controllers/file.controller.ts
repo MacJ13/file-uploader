@@ -1,5 +1,5 @@
 import { User } from "../../generated/prisma";
-import { saveFileToDB } from "../services/file.service";
+import { getUserFiles, saveFileToDB } from "../services/file.service";
 import { HandlerType } from "../types/handlers";
 
 const upload_file_post: HandlerType = async (req, res, next) => {
@@ -21,8 +21,20 @@ const upload_file_post: HandlerType = async (req, res, next) => {
   }
 };
 
+const file_list: HandlerType = async (req, res, next) => {
+  const user = req.user as User;
+
+  const files = await getUserFiles(+user.id);
+  res.render("pages/fileList", {
+    title: "file list",
+    user: user,
+    files: files,
+  });
+};
+
 export default {
   upload_file_post,
+  file_list,
 };
 
 //

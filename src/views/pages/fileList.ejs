@@ -1,0 +1,64 @@
+<%- include("../partials/head.ejs") %>
+<!-- <body class="bg-gray-100 flex items-center justify-center h-screen"></body> -->
+ <%- include("../partials/navigation.ejs") %>
+<body class="body">
+
+<main class="main py-8">
+  <div class="flex-1 flex min-h-0 w-full">
+    <%- include("../partials/sidebar.ejs") %>
+    <div class="mt-5 mx-auto w-full px-10">
+      <div class="flex justify-between w-full">
+        <h1 class="text-4xl font-bold mb-4 uppercase">user files</h1>
+        <form class="flex items-center gap-3 form-upload-file" method="post" action="/file/upload" enctype="multipart/form-data">
+          <label for="file" class="flex items-center gap-3 text-lg font-bold uppercase cursor-pointer">
+          <%- include("../icons/upload.ejs") %>
+          upload file
+          </label>
+          <input type="hidden" id="folderId" name="folderId" value="<%= locals.folder ? locals.folder.id : null %>" />
+          <input class="hidden" type="file" id="file" name="file"/>
+        </form>
+        <!-- <%- include("../partials/folderListForm.ejs") %> -->
+      </div>
+      <% if(locals.files) { %>
+        <table class="dashboard-list gap-5">
+          <thead class="w-full">
+            <tr class="dashboard-table-head">
+              <th class="flex flex-2 gap-2 items-center">
+                name:
+              </th>
+              <th class="flex-1">created at:</th>
+              <th class="flex-1">location</th>
+              <th class="h-5 w-5">&nbsp;</th>
+            </tr>
+          </thead> 
+          <tbody class="w-full flex flex-col gap-8">
+            <% locals.files.forEach(file => { %>
+              <tr data-id="<%= file.id %>" class="dashboard-table-row">
+                <td class="flex-2 ">
+                    <a class="flex gap-2 items-center" href="/file/<%= file.id %>">
+                    <%- include("../icons/file.ejs") %>
+                    <span><%= file.name %></span>
+                  </a>
+                </td>
+                <td class="flex-1"><%= new Date(file.created_at).toLocaleString(); %></td>
+                 <!-- <td class="flex-1"><%- file.folder ? file.folder.name : '&nbsp;' %></td>     -->
+                <td class="flex-1"><%- file.folder ? file.folder.name : "-" %></td>  
+                 <td class="relative">
+                  <%- include("../icons/more.ejs") %>
+                </td>            
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      <% } else { %>
+        <em>there is no files. add new file</em>
+      <% } %>  
+    </div>
+  </div>
+</main> 
+
+<script src="../../../public/js/uploadFile.js"></script>
+<!-- <script src="../../../public/js/folderWindow.js"></script>  -->
+</body>
+
+<%- include("../partials/footer.ejs") %>

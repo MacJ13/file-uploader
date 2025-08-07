@@ -7,6 +7,8 @@ const fileRouter = Router();
 
 fileRouter.use(redirectIfGuest);
 
+fileRouter.get("/all", fileController.file_list);
+
 fileRouter.post(
   "/upload",
   fileUpload.single("file"),

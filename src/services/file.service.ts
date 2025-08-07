@@ -36,3 +36,21 @@ export const saveFileToDB = async (
     },
   });
 };
+
+export const getUserFiles = async (
+  userId: number,
+  folderId: number | null = null
+) => {
+  const files = await prisma.file.findMany({
+    where: { userId: userId },
+    select: {
+      id: true,
+      name: true,
+      created_at: true,
+      folder: { select: { name: true } },
+    },
+    orderBy: { created_at: "desc" },
+  });
+
+  return files;
+};

@@ -59,20 +59,15 @@
           </div>
           <div class="flex flex-col">
             <div class="dashboard-heading">
-              
+              <h2 class="mr-auto">last added files:</h2>
               <form class="flex items-center gap-3 form-upload-file" method="post" action="/file/upload" enctype="multipart/form-data">
-                <label for="file" class="flex items-center gap-3 text-xl font-bold uppercase cursor-pointer">
-                  upload 
-                  <%- include("../icons/upload.ejs") %>
-                  |
-                </label>
-                <input type="hidden" id="folderId" name="folderId" value="<%= null %>" />
-                <input class="hidden" type="file" id="file" name="file"/>
-                <!-- <button class="font-bold bg-neutral-200" type="submit">
-               
-                </button> -->
+              <label for="file" class="flex items-center gap-3 text-xl font-bold uppercase cursor-pointer">
+                upload file 
+                <%- include("../icons/upload.ejs") %>
+              </label>
+              <input type="hidden" id="folderId" name="folderId" value="<%= null %>" />
+              <input class="hidden" type="file" id="file" name="file"/>
               </form>
-              <h2>last added files:</h2>
             </div>
             <% if(locals.files.length) { %>
               <table class="dashboard-list gap-5">
@@ -95,7 +90,7 @@
                       </td>
                       <td class="flex-1"><%= new Date(file.created_at).toLocaleString(); %></td>
                       <td class="flex-1"><%- file.folder ? file.folder.name : '&nbsp;' %></td>
-                      <td>
+                      <td class="relative">
                         <%- include("../icons/more.ejs") %>
                       </td>            
                     </tr>

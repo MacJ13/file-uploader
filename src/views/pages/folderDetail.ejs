@@ -16,17 +16,15 @@
            <h1 class="text-4xl font-bold uppercase"><%= locals.folder.name %></h1>
         </div>
         <div class="flex flex-row gap-8">
-          <form class="flex items-center gap-3" method="post" action="/file/upload" enctype="multipart/form-data">
+          <%- include("../partials/folderListForm.ejs") %>
+          <form class="flex items-center gap-3 form-upload-file" method="post" action="/file/upload" enctype="multipart/form-data">
             <label for="file" class="flex items-center gap-3 text-lg font-bold uppercase cursor-pointer">
               <%- include("../icons/upload.ejs") %>
               upload file
             </label>
             <input type="hidden" id="folderId" name="folderId" value="<%= locals.folder ? locals.folder.id : null %>" />
             <input class="hidden" type="file" id="file" name="file"/>
-            <button class="form-button font-bold bg-neutral-200" type="submit">upload</button>
           </form>
-         
-          <%- include("../partials/folderListForm.ejs") %>
         </div>
        
       </div>
@@ -82,7 +80,8 @@
   </div>
 </main>  
 
-<script src="../../../public/js/folderWindow.js"></script> 
+<script src="../../../public/js/folderWindow.js"></script>
+<script src="../../../public/js/uploadFile.js"></script>
 </body>
 
 <%- include("../partials/footer.ejs") %>
