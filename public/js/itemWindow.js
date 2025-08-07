@@ -13,7 +13,7 @@ dashboard.addEventListener("click", (e) => {
   // const
   const row = event.target.closest(".dashboard-table-row").dataset.id;
 
-  const menu = document.querySelector(`#folder_${row}`);
+  const menu = document.querySelector(`#item_${row}`);
 
   // const allOptions = document.querySelectorAll(".item-options");
 

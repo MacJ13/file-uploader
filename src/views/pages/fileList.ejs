@@ -45,6 +45,7 @@
                 <td class="flex-1"><%- file.folder ? file.folder.name : "-" %></td>  
                  <td class="relative">
                   <%- include("../icons/more.ejs") %>
+                  <%- include("../partials/fileWindowMenu.ejs", {id: file.id}) %>
                 </td>            
               </tr>
             <% }); %>
@@ -58,7 +59,7 @@
 </main> 
 
 <script src="../../../public/js/uploadFile.js"></script>
-<!-- <script src="../../../public/js/folderWindow.js"></script>  -->
+<script src="../../../public/js/itemWindow.js"></script>
 </body>
 
 <%- include("../partials/footer.ejs") %>

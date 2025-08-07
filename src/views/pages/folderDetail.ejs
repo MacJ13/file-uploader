@@ -57,7 +57,7 @@
                     </tr>
             <% }); %>
             <% locals.files.forEach(file => { %>
-                <tr class="dashboard-table-row">
+                <tr data-id="<%= file.id %>" class="dashboard-table-row">
                       <td class="flex-2 ">
                         <a class="flex gap-2 items-center" href="/file/<%= file.id %>">
                           <%- include("../icons/file.ejs") %>
@@ -66,8 +66,9 @@
                       </td>
                       <td class="flex-1"><%= new Date(file.created_at).toLocaleString(); %></td>
                     
-                      <td>
+                      <td class="relative">
                         <%- include("../icons/more.ejs") %>
+                        <%- include("../partials/fileWindowMenu.ejs", {id: file.id}) %>
                       </td>            
                     </tr>
             <% }); %>
@@ -80,7 +81,7 @@
   </div>
 </main>  
 
-<script src="../../../public/js/folderWindow.js"></script>
+<script src="../../../public/js/itemWindow.js"></script>
 <script src="../../../public/js/uploadFile.js"></script>
 </body>
 

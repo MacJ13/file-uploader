@@ -83,7 +83,7 @@
                 </thead>
                 <tbody class="w-full flex flex-col gap-8">
                   <% locals.files.forEach(file => { %>
-                    <tr class="dashboard-table-row">
+                    <tr data-id="<%= file.id %>" class="dashboard-table-row">
                       <td class="flex flex-2 gap-2 items-center">
                         <%- include("../icons/file.ejs") %>
                         <span><%= file.name %></span>
@@ -92,6 +92,7 @@
                       <td class="flex-1"><%- file.folder ? file.folder.name : '&nbsp;' %></td>
                       <td class="relative">
                         <%- include("../icons/more.ejs") %>
+                        <%- include("../partials/fileWindowMenu.ejs", {id: file.id}) %>
                       </td>            
                     </tr>
                   <% }); %>
@@ -108,62 +109,7 @@
 </main>  
 
 <script src="../../../public/js/uploadFile.js"></script>
+<script src="../../../public/js/itemWindow.js"></script>
 </body>
-
-
-            <!-- <ul class="dashboard-list gap-8">
-              <li class="flex items-center px-2 gap-2 rounded-lg w-full">
-                <div class="flex flex-2 gap-2 items-center">
-                  name:
-                </div>
-                <span class="flex-1">created at:</span>
-                <span class="flex-1">location</span>
-                <span class="h-5 w-5">&nbsp;</span>
-              </li>
-              <li class="flex items-center py-1 px-2 gap-2 bg-neutral-50/33 rounded-lg w-full">
-                <div class="flex flex-2 gap-2 items-center">
-                  <%- include("../icons/file.ejs") %>
-                  <span>file 1</span>
-                </div>
-
-              
-                <span class="flex-1">20-07-2025</span>
-                <span class="flex-1">my location</span>
-                <%- include("../icons/more.ejs") %>
-              </li>
-              <li class="flex items-center py-1 px-2 gap-2 bg-neutral-50/33 rounded-lg w-full">
-                <div class="flex flex-2 gap-2 items-center">
-                  <%- include("../icons/file.ejs") %>
-                  <span>file 1</span>
-                </div>
-
-              
-                <span class="flex-1">20-07-2025</span>
-                <span class="flex-1">my location</span>
-                <%- include("../icons/more.ejs") %>
-              </li>
-              <li class="flex items-center py-1 px-2 gap-2 bg-neutral-50/33 rounded-lg w-full">
-                <div class="flex flex-2 gap-2 items-center">
-                  <%- include("../icons/file.ejs") %>
-                  <span>file 1</span>
-                </div>
-
-              
-                <span class="flex-1">20-07-2025</span>
-                <span class="flex-1">my location</span>
-                <%- include("../icons/more.ejs") %>
-              </li>
-              <li class="flex items-center py-1 px-2 gap-2 bg-neutral-50/33 rounded-lg w-full">
-                <div class="flex flex-2 gap-2 items-center">
-                  <%- include("../icons/file.ejs") %>
-                  <span>file 1</span>
-                </div>
-
-              
-                <span class="flex-1">20-07-2025</span>
-                <span class="flex-1">my location</span>
-                <%- include("../icons/more.ejs") %>
-              </li>
-            </ul> -->
 
 <%- include("../partials/footer.ejs") %>
