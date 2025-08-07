@@ -32,9 +32,19 @@ const file_list: HandlerType = async (req, res, next) => {
   });
 };
 
+const file_delete_get: HandlerType = async (req, res, next) => {
+  const user = req.user;
+  res.render("pages/deleteForm", {
+    user: user,
+    title: "Delete file",
+    action: req.originalUrl,
+  });
+};
+
 export default {
   upload_file_post,
   file_list,
+  file_delete_get,
 };
 
 //

@@ -15,4 +15,6 @@ fileRouter.post(
   fileController.upload_file_post
 );
 
+fileRouter.get("/:fileId/delete", fileController.file_delete_get);
+
 export default fileRouter;
