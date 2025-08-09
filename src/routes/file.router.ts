@@ -28,4 +28,6 @@ fileRouter.post(
   fileController.file_delete_post
 );
 
+fileRouter.get("/:fileId/update", fileController.file_update_get);
+
 export default fileRouter;

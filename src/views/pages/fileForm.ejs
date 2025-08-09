@@ -1,0 +1,30 @@
+<%- include("../partials/head.ejs") %>
+<!-- <body class="bg-gray-100 flex items-center justify-center h-screen"></body> -->
+ <%- include("../partials/navigation.ejs") %>
+<body class="body">
+
+<main class="main py-8">
+  <div class="flex-1 flex min-h-0 w-full">
+    <%- include("../partials/sidebar.ejs") %>
+    <div class="mt-5 mx-auto w-full max-w-2xl px-10">
+      <h1 class="text-4xl text-center font-bold mb-4 uppercase">Update file</h1>
+      <!-- <form class="form-box" method="post" action="<%= locals.action %>"> -->
+      <form class="form-box" method="post" action="/file/<%= locals.file.id %>/update">
+        <div class="form-field">
+          <label for="title" class="form-label">title</label>
+          <input id="title" type="text" name="title" value="<%= locals.data ? locals.data.title : '' %>" class="form-input" />
+          <input id="path" type="hidden" name="path" value="<%= locals.data ? locals.data.path : '' %>" />   
+        </div> 
+        <div class="form-field form-field-last">
+          <button class="form-button" type="submit">update</button>
+        </div>
+        <% if(locals.errors) { %>
+          <%- include("../partials/errorFields.ejs") %>
+        <% } %>
+      </form>
+    </div>
+  </div>
+</main> 
+</body>
+
+<%- include("../partials/footer.ejs") %>

@@ -1,13 +1,17 @@
+import path from "path";
 import { User } from "../../generated/prisma";
 import {
   deleteFileWithPhysicalRemove,
   getFileById,
   getUserFiles,
   saveFileToDB,
+  updateFile,
+  updateFileName,
 } from "../services/file.service";
 import { verifyUserPassword } from "../services/user.service";
 import { HandlerType } from "../types/handlers";
 import { getRedirectUrlForFolder } from "../utils/helpers/getRedirectUrlForFolder";
+import { splitFileName } from "../utils/helpers/splitFileName";
 
 const upload_file_post: HandlerType = async (req, res, next) => {
   try {
@@ -98,12 +102,33 @@ const file_delete_post: HandlerType = async (req, res, next) => {
   }
 };
 
+const file_update_get: HandlerType = async (req, res, next) => {
+  const user = req.user as User;
+  const fileId = +req.params.fileId;
+
+  try {
+    const file = await getFileById(fileId);
+
+    const { fileName } = splitFileName(file?.name as string);
+
+    res.render("pages/fileForm", {
+      user: user,
+      title: "upload file",
+      file: file,
+      data: { title: fileName, path: file?.path },
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 export default {
   upload_file_post,
   file_detail,
   file_list,
   file_delete_get,
   file_delete_post,
+  file_update_get,
 };
 
 //
