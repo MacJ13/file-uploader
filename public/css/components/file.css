@@ -1,0 +1,19 @@
+.file-detail {
+  @apply flex flex-col gap-8 w-full;
+}
+
+.file-item {
+  @apply flex items-center;
+}
+
+.file-label {
+  @apply font-bold w-24 uppercase;
+}
+
+.file-links {
+  @apply w-full flex justify-center gap-8 mt-10;
+}
+
+.file-link {
+  @apply px-2 py-3 rounded-lg uppercase font-bold tracking-wide;
+}

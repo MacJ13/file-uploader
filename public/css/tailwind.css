@@ -272,6 +272,9 @@
   .mb-4 {
     margin-bottom: calc(var(--spacing) * 4);
   }
+  .mb-10 {
+    margin-bottom: calc(var(--spacing) * 10);
+  }
   .flex {
     display: flex;
   }
@@ -280,6 +283,14 @@
   }
   .table {
     display: table;
+  }
+  .size-7 {
+    width: calc(var(--spacing) * 7);
+    height: calc(var(--spacing) * 7);
+  }
+  .size-40 {
+    width: calc(var(--spacing) * 40);
+    height: calc(var(--spacing) * 40);
   }
   .h-5 {
     height: calc(var(--spacing) * 5);
@@ -396,11 +407,23 @@
   .bg-neutral-50 {
     background-color: var(--color-neutral-50);
   }
+  .bg-neutral-50\/33 {
+    background-color: color-mix(in srgb, oklch(98.5% 0 0) 33%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-neutral-50) 33%, transparent);
+    }
+  }
   .bg-neutral-200 {
     background-color: var(--color-neutral-200);
   }
+  .bg-red-800 {
+    background-color: var(--color-red-800);
+  }
   .bg-stone-500 {
     background-color: var(--color-stone-500);
+  }
+  .p-2 {
+    padding: calc(var(--spacing) * 2);
   }
   .px-4 {
     padding-inline: calc(var(--spacing) * 4);
@@ -416,6 +439,9 @@
   }
   .py-8 {
     padding-block: calc(var(--spacing) * 8);
+  }
+  .pt-4 {
+    padding-top: calc(var(--spacing) * 4);
   }
   .pr-4 {
     padding-right: calc(var(--spacing) * 4);
@@ -633,6 +659,39 @@
     padding-inline: calc(var(--spacing) * 2);
     padding-block: calc(var(--spacing) * 1);
   }
+}
+.file-detail {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: calc(var(--spacing) * 8);
+}
+.file-item {
+  display: flex;
+  align-items: center;
+}
+.file-label {
+  width: calc(var(--spacing) * 24);
+  --tw-font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+}
+.file-links {
+  margin-top: calc(var(--spacing) * 10);
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  gap: calc(var(--spacing) * 8);
+}
+.file-link {
+  border-radius: var(--radius-lg);
+  padding-inline: calc(var(--spacing) * 2);
+  padding-block: calc(var(--spacing) * 3);
+  --tw-font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-bold);
+  --tw-tracking: var(--tracking-wide);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
 }
 @layer components {
   .body {
