@@ -11,6 +11,8 @@ fileRouter.use(redirectIfGuest);
 
 fileRouter.get("/all", fileController.file_list);
 
+fileRouter.get("/:fileId", fileController.file_detail);
+
 fileRouter.post(
   "/upload",
   fileUpload.single("file"),

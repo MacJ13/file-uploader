@@ -2,6 +2,7 @@ import path from "path";
 import fs from "fs/promises";
 import { getFolderName } from "./folder.service";
 import prisma from "../config/prisma.config";
+import Path from "path";
 
 export const resolveUploadPath = async (username: string, folderId: number) => {
   // 1. get folder name
@@ -52,6 +53,23 @@ export const getUserFiles = async (
   });
 
   return files;
+};
+
+export const getFileById = async (id: number) => {
+  const file = await prisma.file.findUnique({
+    where: { id: id },
+    select: {
+      name: true,
+      id: true,
+      size: true,
+      path: true,
+      type: true,
+      created_at: true,
+      folder: { select: { name: true, id: true } },
+    },
+  });
+
+  return file;
 };
 
 export const deleteFile = async (id: number) => {

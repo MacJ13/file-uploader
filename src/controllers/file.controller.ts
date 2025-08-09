@@ -1,6 +1,7 @@
 import { User } from "../../generated/prisma";
 import {
   deleteFileWithPhysicalRemove,
+  getFileById,
   getUserFiles,
   saveFileToDB,
 } from "../services/file.service";
@@ -22,6 +23,25 @@ const upload_file_post: HandlerType = async (req, res, next) => {
     }
 
     res.redirect(redirectURL);
+  } catch (err) {
+    next(err);
+  }
+};
+
+const file_detail: HandlerType = async (req, res, next) => {
+  // 1. get user from req. user
+  const user = req.user as User;
+  // 2. get folderId parameter
+  const fileId = +req.params.fileId;
+
+  try {
+    const file = await getFileById(fileId);
+
+    res.render("pages/fileDetail", {
+      user: user,
+      file: file,
+      title: `${file?.name} file detail`,
+    });
   } catch (err) {
     next(err);
   }
@@ -80,6 +100,7 @@ const file_delete_post: HandlerType = async (req, res, next) => {
 
 export default {
   upload_file_post,
+  file_detail,
   file_list,
   file_delete_get,
   file_delete_post,
