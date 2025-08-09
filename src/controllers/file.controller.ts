@@ -1,6 +1,12 @@
 import { User } from "../../generated/prisma";
-import { getUserFiles, saveFileToDB } from "../services/file.service";
+import {
+  deleteFileWithPhysicalRemove,
+  getUserFiles,
+  saveFileToDB,
+} from "../services/file.service";
+import { verifyUserPassword } from "../services/user.service";
 import { HandlerType } from "../types/handlers";
+import { getRedirectUrlForFolder } from "../utils/helpers/getRedirectUrlForFolder";
 
 const upload_file_post: HandlerType = async (req, res, next) => {
   try {
@@ -41,10 +47,42 @@ const file_delete_get: HandlerType = async (req, res, next) => {
   });
 };
 
+const file_delete_post: HandlerType = async (req, res, next) => {
+  const fileId = +req.params.fileId;
+
+  const password = req.body.password;
+  const user = req.user as User;
+
+  try {
+    const correctPassword = await verifyUserPassword(password, user.password);
+
+    if (!correctPassword) {
+      res.render("pages/deleteForm", {
+        user: user,
+        title: "Delete File",
+        errors: ["user password is incorrect"],
+        action: req.originalUrl,
+      });
+      return;
+    }
+
+    const deletedFile = await deleteFileWithPhysicalRemove(fileId);
+
+    const redirectUrl = deletedFile.folderId
+      ? getRedirectUrlForFolder(deletedFile.folderId)
+      : "/file/all";
+
+    res.redirect(redirectUrl);
+  } catch (err) {
+    next(err);
+  }
+};
+
 export default {
   upload_file_post,
   file_list,
   file_delete_get,
+  file_delete_post,
 };
 
 //

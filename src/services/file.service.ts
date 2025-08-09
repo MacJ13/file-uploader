@@ -1,7 +1,6 @@
 import path from "path";
 import fs from "fs/promises";
 import { getFolderName } from "./folder.service";
-import { Multer } from "multer";
 import prisma from "../config/prisma.config";
 
 export const resolveUploadPath = async (username: string, folderId: number) => {
@@ -53,4 +52,15 @@ export const getUserFiles = async (
   });
 
   return files;
+};
+
+export const deleteFile = async (id: number) => {
+  return await prisma.file.delete({ where: { id: id } });
+};
+
+export const deleteFileWithPhysicalRemove = async (id: number) => {
+  const file = await deleteFile(id);
+
+  await fs.unlink(file.path);
+  return file;
 };
