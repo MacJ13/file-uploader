@@ -30,4 +30,6 @@ fileRouter.post(
 
 fileRouter.get("/:fileId/update", fileController.file_update_get);
 
+fileRouter.post("/:fileId/update", fileController.file_update_post);
+
 export default fileRouter;

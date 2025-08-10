@@ -2,7 +2,7 @@ import path from "path";
 import fs from "fs/promises";
 import { getFolderName } from "./folder.service";
 import prisma from "../config/prisma.config";
-import Path from "path";
+import { parseFilePath } from "../utils/helpers/parseFilePath";
 
 export const resolveUploadPath = async (username: string, folderId: number) => {
   // 1. get folder name
@@ -81,4 +81,32 @@ export const deleteFileWithPhysicalRemove = async (id: number) => {
 
   await fs.unlink(file.path);
   return file;
+};
+
+export const updateFileName = async (
+  id: number,
+  fileName: string,
+  filePath: string
+) => {
+  const { fileDir, fileExt } = parseFilePath(filePath);
+
+  const newPath = fileDir + "\\" + fileName + fileExt;
+  const newFileName = fileName + fileExt;
+
+  const updatedFile = await prisma.file.update({
+    where: { id: id },
+    data: { name: newFileName, path: newPath },
+  });
+
+  return updatedFile;
+};
+
+export const updateFile = async (
+  id: number,
+  fileName: string,
+  filePath: string
+) => {
+  const updatedFile = await updateFileName(id, fileName, filePath);
+
+  await fs.rename(filePath, updatedFile.path);
 };

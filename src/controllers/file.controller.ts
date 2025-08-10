@@ -108,6 +108,7 @@ const file_update_get: HandlerType = async (req, res, next) => {
 
   try {
     const file = await getFileById(fileId);
+    console.log(file);
 
     const { fileName } = splitFileName(file?.name as string);
 
@@ -122,6 +123,16 @@ const file_update_get: HandlerType = async (req, res, next) => {
   }
 };
 
+const file_update_post: HandlerType = async (req, res, next) => {
+  const fileId = +req.params.fileId;
+
+  const { title, path } = req.body;
+
+  await updateFile(fileId, title, path);
+
+  res.redirect(`/file/${fileId}`);
+};
+
 export default {
   upload_file_post,
   file_detail,
@@ -129,6 +140,7 @@ export default {
   file_delete_get,
   file_delete_post,
   file_update_get,
+  file_update_post,
 };
 
 //
