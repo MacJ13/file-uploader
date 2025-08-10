@@ -9,7 +9,7 @@
     <div class="mt-5 mx-auto w-full max-w-2xl px-10">
       <h1 class="text-4xl text-center font-bold mb-4 uppercase">Update file</h1>
       <!-- <form class="form-box" method="post" action="<%= locals.action %>"> -->
-      <form class="form-box" method="post" action="/file/<%= locals.file.id %>/update">
+      <form class="form-box" method="post" action="<%= locals.action %>">
         <div class="form-field">
           <label for="title" class="form-label">title</label>
           <input id="title" type="text" name="title" value="<%= locals.data ? locals.data.title : '' %>" class="form-input" />

@@ -117,6 +117,7 @@ const file_update_get: HandlerType = async (req, res, next) => {
       title: "upload file",
       file: file,
       data: { title: fileName, path: file?.path },
+      action: req.originalUrl,
     });
   } catch (err) {
     next(err);

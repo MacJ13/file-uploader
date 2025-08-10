@@ -1,7 +1,7 @@
 import { Router } from "express";
 import folderController from "../controllers/folder.controller";
 import { redirectIfGuest } from "../middlewares/redirectAuth";
-import { folderValidation } from "../middlewares/validators/folderValidators";
+import { itemValidation } from "../middlewares/validators/itemValidators";
 import { handleValidation } from "../middlewares/handleValidation";
 import { passwordValidation } from "../middlewares/validators/authValidators";
 
@@ -13,8 +13,8 @@ folderRouter.get("/create", folderController.create_folder_get);
 
 folderRouter.post(
   "/create",
-  folderValidation,
-  handleValidation({ view: "pages/folderForm", title: "Create new account" }),
+  itemValidation,
+  handleValidation({ view: "pages/folderForm", title: "Create new folder" }),
   folderController.create_folder_post
 );
 
@@ -22,15 +22,11 @@ folderRouter.get("/all", folderController.folder_list);
 
 folderRouter.post(
   "/:folderId",
-  folderValidation,
+  itemValidation,
   folderController.add_folder_in_list
 );
 
-folderRouter.post(
-  "/all",
-  folderValidation,
-  folderController.add_folder_in_list
-);
+folderRouter.post("/all", itemValidation, folderController.add_folder_in_list);
 
 folderRouter.get("/:folderId", folderController.folder_detail_get);
 
@@ -38,7 +34,7 @@ folderRouter.get("/:folderId/update", folderController.folder_update_get);
 
 folderRouter.post(
   "/:folderId/update",
-  folderValidation,
+  itemValidation,
   handleValidation({ view: "pages/folderForm", title: "Update Folder" }),
   folderController.folder_update_post
 );
