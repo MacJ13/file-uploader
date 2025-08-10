@@ -4,6 +4,7 @@ import { redirectIfGuest } from "../middlewares/redirectAuth";
 import { itemValidation } from "../middlewares/validators/itemValidators";
 import { handleValidation } from "../middlewares/handleValidation";
 import { passwordValidation } from "../middlewares/validators/authValidators";
+import { handleFolderValidation } from "../middlewares/handleFolderValidation";
 
 const folderRouter = Router();
 
@@ -23,6 +24,7 @@ folderRouter.get("/all", folderController.folder_list);
 folderRouter.post(
   "/:folderId",
   itemValidation,
+  handleFolderValidation,
   folderController.add_folder_in_list
 );
 

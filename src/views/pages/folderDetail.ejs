@@ -9,10 +9,9 @@
     <div class="mt-5 mx-auto w-full px-10">
       <div class="flex justify-between w-full">
         <div class="flex flex-row items-center gap-5">
-           <a href="<%= locals.backLink %>">
+         <a href="<%= locals.backLink %>">
             <%- include("../icons/backArrow.ejs") %> 
-           </a> 
-           
+          </a> 
            <h1 class="text-4xl font-bold uppercase"><%= locals.folder.name %></h1>
         </div>
         <div class="flex flex-row gap-8">
@@ -28,7 +27,7 @@
         </div>
        
       </div>
-      <% if(locals.folders.length || locals.files.length) { %>
+      <% if(locals.folder.subfolders.length || locals.folder.files.length) { %>
         <table class="dashboard-list gap-5">
           <thead class="w-full">
             <tr class="dashboard-table-head">
@@ -39,8 +38,9 @@
               <th class="h-5 w-5">&nbsp;</th>
             </tr>
           </thead> 
+          
           <tbody class="w-full flex flex-col gap-8">
-            <% locals.folders.forEach(folder => { %>
+            <% locals.folder.subfolders.forEach(folder => { %>
                 <tr data-id="<%= folder.id %>" class="dashboard-table-row">
                       <td class="flex-2 ">
                         <a class="flex gap-2 items-center" href="/folder/<%= folder.id %>">
@@ -56,7 +56,7 @@
                       
                     </tr>
             <% }); %>
-            <% locals.files.forEach(file => { %>
+            <% locals.folder.files.forEach(file => { %>
                 <tr data-id="<%= file.id %>" class="dashboard-table-row">
                       <td class="flex-2 ">
                         <a class="flex gap-2 items-center" href="/file/<%= file.id %>">

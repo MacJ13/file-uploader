@@ -5,16 +5,14 @@ import {
   deleteFolder,
   getFolderById,
   getFolderName,
-  getParentFolder,
   getUserFolders,
   updateFolderName,
   updateFolderVisitedDate,
 } from "../services/folder.service";
-import { validationResult } from "express-validator";
-import { getValidationErrorMessages } from "../utils/errors/getValidationErrorMessages";
 import { getParentLink } from "../utils/helpers/getParentLink";
 import { verifyUserPassword } from "../services/user.service";
 import { getRedirectUrlForFolder } from "../utils/helpers/getRedirectUrlForFolder";
+import { parseFolderId } from "../utils/helpers/parseFolderId";
 
 const create_folder_get: HandlerType = (req, res, next) => {
   const user = req.user;
@@ -53,30 +51,14 @@ const folder_list: HandlerType = async (req, res, next) => {
 
 const add_folder_in_list: HandlerType = async (req, res, next) => {
   const user = req.user as User;
-  const folderId = req.params.folderId ? +req.params.folderId : null;
-
-  const errorResults = validationResult(req);
+  const folderId = parseFolderId(req.params.folderId);
 
   const folderData = req.body;
 
   try {
-    if (!errorResults.isEmpty()) {
-      const folders = await getUserFolders(user.id, folderId);
-      const errors = getValidationErrorMessages(errorResults.array());
-      res.render("pages/folderList", {
-        title: "folder list",
-        user: user,
-        folders: folders,
-        errors: errors,
-        data: folderData,
-        action: req.originalUrl,
-      });
-      return;
-    }
-
     const folderTitle = folderData.title;
+
     await createFolder(folderTitle, user.id, folderId);
-    console.log("folder is created in folder list");
     res.redirect(req.originalUrl);
   } catch (err) {
     next(err);
@@ -174,7 +156,7 @@ const folder_delete_post: HandlerType = async (req, res, next) => {
 
     const deletedFolder = await deleteFolder(+folderId);
 
-    const redirectUrl = getRedirectUrlForFolder(deletedFolder.id);
+    const redirectUrl = getRedirectUrlForFolder(deletedFolder.parentFolderId);
 
     res.redirect(redirectUrl);
   } catch (err) {

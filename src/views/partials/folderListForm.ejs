@@ -2,7 +2,7 @@
   <div class="flex flex-row items-center gap-5">
     <label for="title" class="text-lg font-bold uppercase">add new folder</label>
     <div class="flex rounded-lg overflow-hidden">
-      <input id="title" type="text" name="title" value="<%= locals.data ? data.title : '' %>" class="form-input" />    
+      <input id="title" type="text" name="title" value="<%= locals.data ? locals.data.title : '' %>" class="form-input" />    
       <button class="form-button font-bold bg-neutral-200" type="submit">create</button>
     </div>
   </div>
