@@ -1,4 +1,3 @@
-import path from "path";
 import { User } from "../../generated/prisma";
 import {
   deleteFileWithPhysicalRemove,
@@ -6,7 +5,6 @@ import {
   getUserFiles,
   saveFileToDB,
   updateFile,
-  updateFileName,
 } from "../services/file.service";
 import { verifyUserPassword } from "../services/user.service";
 import { HandlerType } from "../types/handlers";

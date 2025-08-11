@@ -5,6 +5,7 @@ import {
   deleteFolder,
   getFolderById,
   getFolderName,
+  getFolderPathFromDB,
   getUserFolders,
   updateFolderName,
   updateFolderVisitedDate,
@@ -13,6 +14,8 @@ import { getParentLink } from "../utils/helpers/getParentLink";
 import { verifyUserPassword } from "../services/user.service";
 import { getRedirectUrlForFolder } from "../utils/helpers/getRedirectUrlForFolder";
 import { parseFolderId } from "../utils/helpers/parseFolderId";
+import fs from "fs/promises";
+import fsSync from "fs";
 
 const create_folder_get: HandlerType = (req, res, next) => {
   const user = req.user;
@@ -95,7 +98,7 @@ const folder_detail_get: HandlerType = async (req, res, next) => {
 };
 
 const folder_update_get: HandlerType = async (req, res, next) => {
-  const user = req.user;
+  const user = req.user as User;
   const folderId = req.params.folderId;
 
   const folderName = await getFolderName(+folderId);
@@ -111,12 +114,13 @@ const folder_update_get: HandlerType = async (req, res, next) => {
 
 const folder_update_post: HandlerType = async (req, res, next) => {
   // 1. get folderId and  title from form filed of reques
+  const user = req.user as User;
   const title = req.body.title;
   const folderId = +req.params.folderId;
 
   try {
     // 2. update folder title in db
-    await updateFolderName(title, folderId);
+    await updateFolderName(title, folderId, user.username);
     // 3. redirect to given specific folder
     res.redirect(`/folder/${folderId}`);
   } catch (err) {
@@ -152,6 +156,11 @@ const folder_delete_post: HandlerType = async (req, res, next) => {
         action: req.originalUrl,
       });
       return;
+    }
+    const path = await getFolderPathFromDB(user.username, +folderId);
+
+    if (fsSync.existsSync(path)) {
+      await fs.rmdir(path, { recursive: true });
     }
 
     const deletedFolder = await deleteFolder(+folderId);

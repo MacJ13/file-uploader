@@ -1,21 +1,17 @@
-import path from "path";
 import fs from "fs/promises";
-import { getFolderName } from "./folder.service";
+import { getFolderPathFromDB } from "./folder.service";
 import prisma from "../config/prisma.config";
 import { parseFilePath } from "../utils/helpers/parseFilePath";
 
 export const resolveUploadPath = async (username: string, folderId: number) => {
-  // 1. get folder name
+  // 1. set path where we have to save files
+  const path = await getFolderPathFromDB(username, folderId);
 
-  const folderName = await getFolderName(folderId);
-  // 2. set path where we have to save files
+  // 2. create directory is necessery
+  await fs.mkdir(path, { recursive: true });
 
-  const filePath = path.join("public", "files", username, folderName || "");
-  // 3. create directory is necessery
-  await fs.mkdir(filePath, { recursive: true });
-
-  // 4. return path
-  return filePath;
+  // 3. return path
+  return path;
 };
 
 export const saveFileToDB = async (
