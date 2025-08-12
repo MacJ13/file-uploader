@@ -39,7 +39,7 @@
             </tr>
           </thead> 
           
-          <tbody class="w-full flex flex-col gap-8">
+          <tbody class="w-full flex flex-col gap-8 file-list">
             <% locals.folder.subfolders.forEach(folder => { %>
                 <tr data-id="<%= folder.id %>" class="dashboard-table-row">
                       <td class="flex-2 ">
@@ -68,7 +68,7 @@
                     
                       <td class="relative">
                         <%- include("../icons/more.ejs") %>
-                        <%- include("../partials/fileWindowMenu.ejs", {id: file.id}) %>
+                        <%- include("../partials/fileWindowMenu.ejs", { id: file.id, name: file.name }) %>
                       </td>            
                     </tr>
             <% }); %>
@@ -83,6 +83,7 @@
 
 <script src="../../../public/js/itemWindow.js"></script>
 <script src="../../../public/js/uploadFile.js"></script>
+<script src="../../../public/js/downloadFile.js"></script>
 </body>
 
 <%- include("../partials/footer.ejs") %>

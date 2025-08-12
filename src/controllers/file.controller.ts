@@ -132,6 +132,21 @@ const file_update_post: HandlerType = async (req, res, next) => {
   res.redirect(`/file/${fileId}`);
 };
 
+const file_download_get: HandlerType = async (req, res, next) => {
+  // get fileId from params
+  const fileID = +req.params.fileId;
+
+  try {
+    const file = await getFileById(fileID);
+
+    const filePath = file?.path as string;
+
+    res.download(filePath);
+  } catch (err) {
+    next(err);
+  }
+};
+
 export default {
   upload_file_post,
   file_detail,
@@ -140,6 +155,7 @@ export default {
   file_delete_post,
   file_update_get,
   file_update_post,
+  file_download_get,
 };
 
 //

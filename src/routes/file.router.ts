@@ -38,4 +38,6 @@ fileRouter.post(
   fileController.file_update_post
 );
 
+fileRouter.get("/:fileId/download", fileController.file_download_get);
+
 export default fileRouter;

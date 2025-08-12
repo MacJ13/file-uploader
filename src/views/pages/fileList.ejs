@@ -20,7 +20,7 @@
         <!-- <%- include("../partials/folderListForm.ejs") %> -->
       </div>
       <% if(locals.files) { %>
-        <table class="dashboard-list gap-5">
+        <table class="dashboard-list file-list gap-5">
           <thead class="w-full">
             <tr class="dashboard-table-head">
               <th class="flex flex-2 gap-2 items-center">
@@ -45,7 +45,7 @@
                 <td class="flex-1"><%- file.folder ? file.folder.name : "-" %></td>  
                  <td class="relative">
                   <%- include("../icons/more.ejs") %>
-                  <%- include("../partials/fileWindowMenu.ejs", {id: file.id}) %>
+                  <%- include("../partials/fileWindowMenu.ejs", { id: file.id, name: file.name }) %>
                 </td>            
               </tr>
             <% }); %>
@@ -60,6 +60,7 @@
 
 <script src="../../../public/js/uploadFile.js"></script>
 <script src="../../../public/js/itemWindow.js"></script>
+<script src="../../../public/js/downloadFile.js" ></script>
 </body>
 
 <%- include("../partials/footer.ejs") %>

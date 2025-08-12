@@ -24,23 +24,20 @@
           </thead> 
           <tbody class="w-full flex flex-col gap-8">
             <% locals.folders.forEach(folder => { %>
-                <tr  data-id="<%= folder.id %>" class="dashboard-table-row">
-                      <td class="flex-2 ">
-                        <a class="flex gap-2 items-center" href="/folder/<%= folder.id %>">
-                          <%- include("../icons/folder.ejs") %>
-                          <span><%= folder.name %></span>
-                        </a>
-                      </td>
-                      <td class="flex-1"><%= new Date(folder.created_at).toLocaleString(); %></td>
+              <tr data-id="<%= folder.id %>" class="dashboard-table-row">
+                <td class="flex-2 ">
+                  <a class="flex gap-2 items-center" href="/folder/<%= folder.id %>">
+                    <%- include("../icons/folder.ejs") %>
+                    <span><%= folder.name %></span>
+                  </a>
+                </td>
+                <td class="flex-1"><%= new Date(folder.created_at).toLocaleString(); %></td>
                     
-                      <td class="relative">
-                    
-                           <%- include("../icons/more.ejs") %>
-                           <%- include("../partials/folderWindowMenu.ejs", {id: folder.id}) %>
-                      
-                       
-                      </td>            
-                    </tr>
+                <td class="relative">
+                  <%- include("../icons/more.ejs") %>
+                  <%- include("../partials/folderWindowMenu.ejs", {id: folder.id}) %>
+                </td>            
+              </tr>
             <% }); %>
           </tbody>
         </table>
