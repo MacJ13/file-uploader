@@ -123,7 +123,7 @@ export const deleteFolder = async (id: number) => {
 };
 
 const getFullPathFolderDirectory = (username: string, parts: string[]) => {
-  const fullPath = path.join("public/files", username, ...parts);
+  const fullPath = path.join("files", username, ...parts);
 
   return fullPath;
 };

@@ -1,10 +1,13 @@
+import { UploadApiResponse } from "cloudinary";
 import { User } from "../../generated/prisma";
 import {
   deleteFileWithPhysicalRemove,
   getFileById,
   getUserFiles,
+  resolveUploadPath,
   saveFileToDB,
   updateFile,
+  uploadFileStream,
 } from "../services/file.service";
 import { verifyUserPassword } from "../services/user.service";
 import { HandlerType } from "../types/handlers";
@@ -13,18 +16,37 @@ import { splitFileName } from "../utils/helpers/splitFileName";
 
 const upload_file_post: HandlerType = async (req, res, next) => {
   try {
-    const userId = (req.user as User).id;
+    const user = req.user as User;
     const folderId = req.body.folderId ? +req.body.folderId : null;
     const file = req.file;
 
-    await saveFileToDB(file, +userId, folderId);
+    if (!file) throw new Error();
 
-    let redirectURL = "/user/dashboard";
+    const folderName = await resolveUploadPath(user.username, folderId);
+
+    const fileResult = await uploadFileStream(folderName, file);
+
+    const { public_id, resource_type } = fileResult as UploadApiResponse;
+
+    const { originalname, size } = file;
+
+    const fileCreation = {
+      public_id,
+      resource_type,
+      originalname,
+      size,
+      folderId,
+      userId: user.id,
+    };
+
+    await saveFileToDB(fileCreation);
+
+    let redirectURL = "/file/all";
     if (folderId) {
       redirectURL = `/folder/${folderId}`;
     }
 
-    res.redirect(redirectURL);
+    return res.redirect(redirectURL);
   } catch (err) {
     next(err);
   }
@@ -106,7 +128,6 @@ const file_update_get: HandlerType = async (req, res, next) => {
 
   try {
     const file = await getFileById(fileId);
-    console.log(file);
 
     const { fileName } = splitFileName(file?.name as string);
 
@@ -125,9 +146,9 @@ const file_update_get: HandlerType = async (req, res, next) => {
 const file_update_post: HandlerType = async (req, res, next) => {
   const fileId = +req.params.fileId;
 
-  const { title, path } = req.body;
+  const { title } = req.body;
 
-  await updateFile(fileId, title, path);
+  await updateFile(fileId, title);
 
   res.redirect(`/file/${fileId}`);
 };
