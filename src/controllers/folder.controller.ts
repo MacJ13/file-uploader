@@ -7,7 +7,7 @@ import {
   getFolderName,
   getFolderPathFromDB,
   getUserFolders,
-  updateFolderName,
+  updateFolder,
   updateFolderVisitedDate,
 } from "../services/folder.service";
 import { getParentLink } from "../utils/helpers/getParentLink";
@@ -120,7 +120,7 @@ const folder_update_post: HandlerType = async (req, res, next) => {
 
   try {
     // 2. update folder title in db
-    await updateFolderName(title, folderId, user.username);
+    await updateFolder(title, folderId, user.username);
     // 3. redirect to given specific folder
     res.redirect(`/folder/${folderId}`);
   } catch (err) {

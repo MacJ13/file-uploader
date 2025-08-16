@@ -151,35 +151,6 @@ export const updateFileNameInDB = async (
   fileName: string,
   newPath: string
 ) => {
-  // const ffile = await getFileById(id);
-
-  // if (!ffile) throw new Error("File not found");
-
-  // const folderPath =
-  //   ffile.path.lastIndexOf("/") >= 0
-  //     ? ffile.path.slice(0, ffile.path.lastIndexOf("/"))
-  //     : "";
-
-  // const newBase = fileName.replace(/\.[^/.]+$/, "");
-
-  // const newPublicId = folderPath ? `${folderPath}/${newBase}` : newBase;
-  // // console.log({ folderPath, fileName, newPublicId });
-
-  // const renamed = await cloudinary.uploader.rename(ffile.path, newPublicId, {
-  //   resource_type: ffile.type, // np. "raw"
-  //   overwrite: true,
-  // });
-
-  // await cloudinary.api.update(newPublicId, {
-  //   display_name: newBase,
-  //   resource_type: ffile.type,
-  // });
-
-  // const updatedFile = await prisma.file.update({
-  //   where: { id: id },
-  //   data: { name: `${newBase}.${ffile.format}`, path: renamed.public_id },
-  // });
-
   const updatedFile = await prisma.file.update({
     where: { id: id },
     data: { name: fileName, path: newPath },
@@ -200,4 +171,12 @@ export const updateFile = async (id: number, fileName: string) => {
   }
 
   // await fs.rename(filePath, updatedFile.path);
+};
+
+export const replaceFilePath = async (oldPath: string, newPath: string) => {
+  await prisma.$executeRaw`
+    UPDATE "File"
+    SET "path" = REPLACE("path", ${oldPath}, ${newPath})
+    WHERE "path" LIKE '%' || ${oldPath} || '%'
+  `;
 };
