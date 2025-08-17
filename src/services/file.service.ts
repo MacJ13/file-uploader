@@ -190,3 +190,13 @@ export const getFileUrl = async (path: string) => {
 
   return cloudFile.secure_url as string;
 };
+
+export const getFileResources = async (path: string) => {
+  const files = await cloudinary.api.resources({
+    type: "upload",
+    prefix: path,
+    resource_type: "raw",
+  });
+
+  return files.resources;
+};

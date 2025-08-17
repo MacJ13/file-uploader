@@ -7,6 +7,7 @@ import {
   getFolderName,
   getFolderPathFromDB,
   getUserFolders,
+  removeCloudFolder,
   updateFolder,
   updateFolderVisitedDate,
 } from "../services/folder.service";
@@ -16,6 +17,10 @@ import { getRedirectUrlForFolder } from "../utils/helpers/getRedirectUrlForFolde
 import { parseFolderId } from "../utils/helpers/parseFolderId";
 import fs from "fs/promises";
 import fsSync from "fs";
+import cloudinary from "../config/cloudinary.config";
+import { normalizeFolderName } from "../utils/helpers/normalizeFolderName";
+import { getFileResources } from "../services/file.service";
+import { getDirectoryPath } from "../utils/helpers/getDirectoryPath";
 
 const create_folder_get: HandlerType = (req, res, next) => {
   const user = req.user;
@@ -159,9 +164,35 @@ const folder_delete_post: HandlerType = async (req, res, next) => {
     }
     const path = await getFolderPathFromDB(user.username, +folderId);
 
-    if (fsSync.existsSync(path)) {
-      await fs.rmdir(path, { recursive: true });
+    const properPath = normalizeFolderName(path);
+
+    const fileResources = await getFileResources(properPath);
+
+    let folderPaths = [];
+
+    for (const file of fileResources) {
+      const properPath = getDirectoryPath(file.public_id);
+
+      // let path = file.public_id.split("/");
+      // path.pop();
+
+      // const properPath = path.join("/");
+
+      if (folderPaths.indexOf(properPath) < 0) {
+        folderPaths.unshift(properPath);
+      }
+
+      await removeCloudFolder(file.public_id, file.resource_type);
     }
+
+    folderPaths.forEach(async (path) => {
+      await cloudinary.api.delete_folder(path);
+    });
+
+    // console.log(result);
+    // if (fsSync.existsSync(path)) {
+    //   await fs.rmdir(path, { recursive: true });
+    // }
 
     const deletedFolder = await deleteFolder(+folderId);
 

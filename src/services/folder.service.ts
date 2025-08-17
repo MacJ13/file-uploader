@@ -178,6 +178,15 @@ export const getFolderPathFromDB = async (
   return fullPath;
 };
 
+export const removeCloudFolder = async (
+  public_id: string,
+  resource_type: string
+) => {
+  await cloudinary.uploader.destroy(public_id, {
+    resource_type: resource_type,
+  });
+};
+
 // update all file with path like oldFoldername in string
 // await prisma.$executeRaw`
 //   UPDATE "File"
