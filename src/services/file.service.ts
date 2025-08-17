@@ -181,3 +181,12 @@ export const replaceFilePath = async (oldPath: string, newPath: string) => {
     WHERE "path" LIKE '%' || ${oldPath} || '%'
   `;
 };
+
+export const getFileUrl = async (path: string) => {
+  const cloudFile = await cloudinary.api.resource(path, {
+    type: "upload",
+    resource_type: "raw",
+  });
+
+  return cloudFile.secure_url as string;
+};

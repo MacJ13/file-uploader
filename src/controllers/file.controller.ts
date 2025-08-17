@@ -3,6 +3,7 @@ import { User } from "../../generated/prisma";
 import {
   deleteFileWithPhysicalRemove,
   getFileById,
+  getFileUrl,
   getUserFiles,
   resolveUploadPath,
   saveFileToDB,
@@ -13,6 +14,7 @@ import { verifyUserPassword } from "../services/user.service";
 import { HandlerType } from "../types/handlers";
 import { getRedirectUrlForFolder } from "../utils/helpers/getRedirectUrlForFolder";
 import { splitFileName } from "../utils/helpers/splitFileName";
+import cloudinary from "../config/cloudinary.config";
 
 const upload_file_post: HandlerType = async (req, res, next) => {
   try {
@@ -162,7 +164,10 @@ const file_download_get: HandlerType = async (req, res, next) => {
 
     const filePath = file?.path as string;
 
-    res.download(filePath);
+    const fileUrl = await getFileUrl(filePath);
+
+    res.redirect("/");
+    res.download(fileUrl);
   } catch (err) {
     next(err);
   }
