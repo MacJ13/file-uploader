@@ -21,4 +21,13 @@ const get_user_dashboard: HandlerType = async (req, res, next) => {
   }
 };
 
-export default { get_user_dashboard };
+const get_user_settings: HandlerType = async (req, res, next) => {
+  const user = req.user as User;
+
+  res.render("pages/userSettings", {
+    title: "user settings",
+    user: user,
+  });
+};
+
+export default { get_user_dashboard, get_user_settings };

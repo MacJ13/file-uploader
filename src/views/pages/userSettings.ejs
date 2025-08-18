@@ -1,0 +1,38 @@
+<%- include("../partials/head.ejs") %>
+
+<%- include("../partials/navigation.ejs") %>
+<body class="body">
+
+<main class="main py-8">
+  <div class="flex-1 flex min-h-0 w-full">
+    <%- include("../partials/sidebar.ejs") %>
+    <div class="mt-5 mx-auto w-full px-10">
+      <div class="flex flex-col gap-5 items-center">
+        <h2 class="text-4xl font-bold uppercase mb-10">User settings</h2>
+        <ul class="links flex flex-col gap-5">
+            <li class="uppercase font-bold tracking-wide">
+                <a class="px-2 py-3 rounded-lg block w-64 text-center bg-neutral-50/33" href="/folder/create">new folder</a>
+            </li>
+            <li class="uppercase font-bold tracking-wide">
+                 <a class="px-2 py-3 rounded-lg block w-64 text-center bg-neutral-50/33" href="#">statistics</a>
+            </li>
+            <li class="uppercase font-bold tracking-wide">
+               <a class="px-2 py-3 rounded-lg block w-64 text-center bg-neutral-50/33" href="#">change password</a>
+            </li>
+            <li class="uppercase font-bold tracking-wide">
+              <form method="GET" action="/auth/logout">
+                <button class="uppercase font-bold tracking-wide px-2 py-3 rounded-lg block w-64 cursor-pointer text-center bg-neutral-50/33">log out</button>
+              </form>
+            </li>
+            <li class="uppercase font-bold tracking-wide">
+                <a class="px-2 py-3 rounded-lg block w-64 text-center bg-red-800" href="#">delete account</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</main> 
+
+</body>
+
+<%- include("../partials/footer.ejs") %>

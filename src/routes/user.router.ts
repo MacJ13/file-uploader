@@ -8,4 +8,6 @@ userRouter.use(redirectIfGuest);
 
 userRouter.get("/dashboard", userController.get_user_dashboard);
 
+userRouter.get("/settings", userController.get_user_settings);
+
 export default userRouter;
