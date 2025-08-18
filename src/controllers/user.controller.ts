@@ -30,4 +30,13 @@ const get_user_settings: HandlerType = async (req, res, next) => {
   });
 };
 
-export default { get_user_dashboard, get_user_settings };
+const change_password_get: HandlerType = async (req, res, next) => {
+  const user = req.user as User;
+
+  res.render("pages/changePasswordForm", {
+    title: "change password",
+    user: user,
+  });
+};
+
+export default { get_user_dashboard, get_user_settings, change_password_get };
