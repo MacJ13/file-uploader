@@ -33,6 +33,7 @@ export const uploadFileStream = async (
 ) => {
   const base = file.originalname.replace(/\.[^/.]+$/, ""); // "esp2"
 
+  console.log(file);
   return new Promise((resolve, reject) => {
     const result = cloudinary.uploader.upload_stream(
       {
@@ -132,13 +133,13 @@ const updateCloudFileName = async (id: number, newFileName: string) => {
   const newPublicId = folderPath ? `${folderPath}/${newFileName}` : newFileName;
 
   const renamed = await cloudinary.uploader.rename(file.path, newPublicId, {
-    resource_type: "raw", // file.type, // np. "raw"
+    resource_type: file.type, // file.type, // np. "raw"
     overwrite: true,
   });
 
   await cloudinary.api.update(newPublicId, {
     display_name: newFileName,
-    resource_type: "raw",
+    resource_type: file.type,
   });
 
   return {
@@ -182,10 +183,11 @@ export const replaceFilePath = async (oldPath: string, newPath: string) => {
   `;
 };
 
-export const getFileUrl = async (path: string) => {
+export const getFileUrl = async (path: string, resourceType: string) => {
   const cloudFile = await cloudinary.api.resource(path, {
     type: "upload",
-    resource_type: "raw",
+    resource_type: resourceType,
+    secure: true,
   });
 
   return cloudFile.secure_url as string;
@@ -195,8 +197,14 @@ export const getFileResources = async (path: string) => {
   const files = await cloudinary.api.resources({
     type: "upload",
     prefix: path,
-    resource_type: "raw",
+    resource_type: "auto",
   });
 
   return files.resources;
+};
+
+export const getFileResource = async (path: string) => {
+  const file = await cloudinary.api.resource(path);
+
+  return file;
 };

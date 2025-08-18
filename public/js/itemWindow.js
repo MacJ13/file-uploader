@@ -1,8 +1,16 @@
 const dashboard = document.querySelector("table");
 
+const body = document.querySelector("body");
+
 let lastOpenedMenu = null;
 
-console.log(dashboard);
+body.addEventListener("click", () => {
+  console.log(lastOpenedMenu);
+  if (lastOpenedMenu) {
+    lastOpenedMenu.classList.add("hidden");
+    lastOpenedMenu = null;
+  }
+});
 
 dashboard.addEventListener("click", (e) => {
   // console.log(e.target);
@@ -11,9 +19,11 @@ dashboard.addEventListener("click", (e) => {
   if (!el) return;
 
   // const
-  const row = event.target.closest(".dashboard-table-row").dataset.id;
+  const row = e.target.closest(".dashboard-table-row").dataset.id;
 
   const menu = document.querySelector(`#item_${row}`);
+
+  e.stopPropagation();
 
   // const allOptions = document.querySelectorAll(".item-options");
 

@@ -59,7 +59,7 @@ export const getDashboardItems = async (userId: number) => {
         folder: { select: { name: true } },
       },
       orderBy: [{ created_at: "desc" }],
-      take: 7,
+      take: 5,
     }),
     await prisma.folder.findMany({
       where: { userId: userId },

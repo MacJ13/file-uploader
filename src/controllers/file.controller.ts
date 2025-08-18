@@ -15,6 +15,8 @@ import { HandlerType } from "../types/handlers";
 import { getRedirectUrlForFolder } from "../utils/helpers/getRedirectUrlForFolder";
 import { splitFileName } from "../utils/helpers/splitFileName";
 import cloudinary from "../config/cloudinary.config";
+import axios from "axios";
+import fs from "fs";
 
 const upload_file_post: HandlerType = async (req, res, next) => {
   try {
@@ -155,19 +157,79 @@ const file_update_post: HandlerType = async (req, res, next) => {
   res.redirect(`/file/${fileId}`);
 };
 
-const file_download_get: HandlerType = async (req, res, next) => {
-  // get fileId from params
-  const fileID = +req.params.fileId;
+// const file_download_get: HandlerType = async (req, res, next) => {
+//   // get fileId from params
+//   const fileID = +req.params.fileId;
 
+//   try {
+//     const file = await getFileById(fileID);
+
+//     const filePath = file?.path as string;
+//     const fileName = file?.name as string;
+
+//     const fileUrl = await getFileUrl(filePath);
+
+//     const head = await axios.head(fileUrl);
+
+//     const contentType =
+//       head.headers["content-type"] || "application/octet-stream";
+//     const contentLength = head.headers["content-length"];
+
+//     // fs.writeFileSync(fileName, response.data);
+
+//     res.setHeader("Content-Disposition", `attachment; filename="${fileName}"`);
+//     res.setHeader("Content-Type", contentType);
+//     if (contentLength) {
+//       res.setHeader("Content-Length", contentLength);
+//     }
+
+//     // res.redirect("/");
+
+//     const response = await axios.get(fileUrl, {
+//       responseType: "stream",
+//     });
+
+//     response.data.on("error", (err: any) => next(err));
+//     response.data.on("end", () => res.end());
+
+//     response.data.pipe(res);
+
+//     res.redirect("/");
+//     // response.data.pipe(res);
+//   } catch (err) {
+//     next(err);
+//   }
+// };
+
+const file_download_get: HandlerType = async (req, res, next) => {
   try {
+    const fileID = +req.params.fileId;
     const file = await getFileById(fileID);
 
-    const filePath = file?.path as string;
+    if (!file) return res.status(404).send("File not found");
 
-    const fileUrl = await getFileUrl(filePath);
+    const filePath = file.path as string;
+    const fileName = file.name as string;
 
-    res.redirect("/");
-    res.download(fileUrl);
+    // directed link to cloudinary file
+    const fileUrl = await getFileUrl(filePath, file.type);
+
+    // get file by streaming,
+    const response = await axios.get(fileUrl, { responseType: "stream" });
+
+    // direct client to Cloudinary immediately
+
+    res.setHeader("Content-Disposition", `attachment; filename="${fileName}"`);
+    res.setHeader(
+      "Content-Type",
+      response.headers["content-type"] || "application/octet-stream"
+    );
+
+    response.data.pipe(res);
+
+    response.data.on("error", (err: any) => next(err));
+    response.data.on("end", () => res.end());
+    // res.redirect("/");
   } catch (err) {
     next(err);
   }
