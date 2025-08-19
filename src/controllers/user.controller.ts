@@ -1,5 +1,8 @@
 import { User } from "../../generated/prisma";
-import { getDashboardItems } from "../services/user.service";
+import {
+  changeUserPassword,
+  getDashboardItems,
+} from "../services/user.service";
 import { HandlerType } from "../types/handlers";
 
 const get_user_dashboard: HandlerType = async (req, res, next) => {
@@ -39,4 +42,18 @@ const change_password_get: HandlerType = async (req, res, next) => {
   });
 };
 
-export default { get_user_dashboard, get_user_settings, change_password_get };
+const change_password_post: HandlerType = async (req, res, next) => {
+  const user = req.user as User;
+  const formPassword = req.body.password;
+
+  await changeUserPassword(user.id, formPassword);
+
+  res.redirect("/user/settings");
+};
+
+export default {
+  get_user_dashboard,
+  get_user_settings,
+  change_password_get,
+  change_password_post,
+};
