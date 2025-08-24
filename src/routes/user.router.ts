@@ -1,7 +1,10 @@
 import { Router } from "express";
 import userController from "../controllers/user.controller";
 import { redirectIfGuest } from "../middlewares/redirectAuth";
-import { changePasswordValidation } from "../middlewares/validators/authValidators";
+import {
+  changePasswordValidation,
+  passwordValidation,
+} from "../middlewares/validators/authValidators";
 import { handleValidation } from "../middlewares/handleValidation";
 
 const userRouter = Router();
@@ -25,5 +28,15 @@ userRouter.post(
 );
 
 userRouter.get("/delete", userController.user_delete_get);
+
+userRouter.post(
+  "/delete",
+  passwordValidation,
+  handleValidation({
+    view: "pages/deleteForm",
+    title: "delete user",
+  }),
+  userController.user_delete_post
+);
 
 export default userRouter;

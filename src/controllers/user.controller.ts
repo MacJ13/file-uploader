@@ -2,6 +2,7 @@ import { User } from "../../generated/prisma";
 import {
   changeUserPassword,
   getDashboardItems,
+  verifyUserPassword,
 } from "../services/user.service";
 import { HandlerType } from "../types/handlers";
 
@@ -61,10 +62,35 @@ const user_delete_get: HandlerType = async (req, res, next) => {
   });
 };
 
+const user_delete_post: HandlerType = async (req, res, next) => {
+  const user = req.user as User;
+
+  const password = req.body.password;
+
+  try {
+    const correctPassword = await verifyUserPassword(password, user.password);
+
+    if (!correctPassword) {
+      res.render("pages/deleteForm", {
+        user: user,
+        title: "delete user",
+        errors: ["user password is incorrect"],
+        action: req.originalUrl,
+      });
+      return;
+    }
+
+    res.redirect("/");
+  } catch (err) {
+    next(err);
+  }
+};
+
 export default {
   get_user_dashboard,
   get_user_settings,
   change_password_get,
   change_password_post,
   user_delete_get,
+  user_delete_post,
 };
