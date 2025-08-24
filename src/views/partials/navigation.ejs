@@ -3,7 +3,7 @@
     <div class="nav_menu">
     <% if(locals.user) { %>
         <h2>Welcome <%= locals.user.username %></h2>
-        <a class="nav_link" href="#">settings</a>
+        <a class="nav_link" href="/user/settings">settings</a>
         <form method="GET" action="/auth/logout">
             <button class="nav_link">log out</button>
         </form>
