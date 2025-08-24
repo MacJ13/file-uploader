@@ -6,3 +6,5 @@ export type FileCreationType = {
   folderId: number | null;
   userId: number;
 };
+
+export type FileResourceType = "image" | "video" | "raw";

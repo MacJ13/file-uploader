@@ -74,7 +74,7 @@ export const getFolderName = async (id: number) => {
     select: { name: true },
   });
 
-  return folder?.name;
+  return folder?.name as string;
 };
 
 export const updateFolder = async (
@@ -91,13 +91,13 @@ export const updateFolder = async (
 
   const newPath = path.join(path.dirname(oldPath), newFolderName);
 
-  if (oldPath === newPath) {
-    return;
-  }
+  // if (oldPath === newPath) {
+  //   return;
+  // }
 
   const properOldPath = normalizeFolderName(oldPath);
   const properNewPath = normalizeFolderName(newPath);
-  console.log({ properOldPath, properNewPath });
+  // console.log({ properOldPath, properNewPath });
 
   // const result = await prisma.$queryRaw`
   // SELECT * FROM "File" WHERE "path" LIKE '%' || ${properOldPath} || '%'
@@ -105,27 +105,27 @@ export const updateFolder = async (
   // console.log({ result });
   // const properNewPath = normalizeFolderName(newPath);
 
-  const files = await cloudinary.api.resources({
-    type: "upload",
-    prefix: `${properOldPath}`,
-    resource_type: "raw",
-  });
-  console.log(files);
+  // const files = await cloudinary.api.resources({
+  //   type: "upload",
+  //   prefix: `${properOldPath}`,
+  //   resource_type: "raw",
+  // });
+  // console.log(files);
 
-  const oldPrefix = properOldPath; // np. "files/user12/folder_test"
-  const newPrefix = properNewPath; // np. "files/user12/folder_update"
+  // const oldPrefix = properOldPath; // np. "files/user12/folder_test"
+  // const newPrefix = properNewPath; // np. "files/user12/folder_update"
 
-  for (const file of files.resources) {
-    const newPublicId = file.public_id.replace(oldPrefix, newPrefix);
+  // for (const file of files.resources) {
+  //   const newPublicId = file.public_id.replace(oldPrefix, newPrefix);
 
-    console.log(newPublicId);
-    // console.log(newPublicId);
+  //   console.log(newPublicId);
+  //   // console.log(newPublicId);
 
-    await cloudinary.uploader.rename(file.public_id, newPublicId, {
-      resource_type: file.resource_type,
-      overwrite: true,
-    });
-  }
+  //   await cloudinary.uploader.rename(file.public_id, newPublicId, {
+  //     resource_type: file.resource_type,
+  //     overwrite: true,
+  //   });
+  // }
 
   await updateFolderName(id, newFolderName);
 
@@ -185,6 +185,33 @@ export const removeCloudFolder = async (
   await cloudinary.uploader.destroy(public_id, {
     resource_type: resource_type,
   });
+};
+
+export const renameResourceFolder = async (
+  oldPublicId: string,
+  newPublicId: string,
+  resourceType: string
+) => {
+  await cloudinary.uploader.rename(oldPublicId, newPublicId, {
+    resource_type: resourceType,
+    overwrite: true,
+    invalidate: true,
+  });
+};
+
+export const updateResourceAssetFolder = async (
+  newPublicId: string,
+  resourceType: string,
+  assetFolder: string
+) => {
+  await cloudinary.api.update(newPublicId, {
+    resource_type: resourceType,
+    asset_folder: assetFolder,
+  });
+};
+
+export const deleteResourceFolder = async (path: string) => {
+  await cloudinary.api.delete_folder(path);
 };
 
 // update all file with path like oldFoldername in string

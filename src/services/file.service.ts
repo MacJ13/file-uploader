@@ -4,7 +4,7 @@ import prisma from "../config/prisma.config";
 import { parseFilePath } from "../utils/helpers/parseFilePath";
 import { normalizeFolderName } from "../utils/helpers/normalizeFolderName";
 import cloudinary from "../config/cloudinary.config";
-import { FileCreationType } from "../types/file";
+import { FileCreationType, FileResourceType } from "../types/file";
 
 export const resolveUploadPath = async (
   username: string,
@@ -207,4 +207,29 @@ export const getFileResource = async (path: string) => {
   const file = await cloudinary.api.resource(path);
 
   return file;
+};
+
+export const getFileResourcesByPath = async (path: string) => {
+  const resourceTypes: FileResourceType[] = ["image", "video", "raw"];
+  const allFiles = [];
+
+  for (const type of resourceTypes) {
+    let nextCursor: string | undefined = undefined;
+
+    do {
+      const response = await cloudinary.api.resources({
+        type: "upload",
+        prefix: path,
+        resource_type: type,
+        max_results: 500, // maximum number results per page
+        next_cursor: nextCursor,
+      });
+
+      allFiles.unshift(...response.resources);
+
+      nextCursor = response.next_cursor;
+    } while (nextCursor);
+  }
+
+  return allFiles;
 };

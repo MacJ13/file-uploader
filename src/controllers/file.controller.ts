@@ -14,9 +14,7 @@ import { verifyUserPassword } from "../services/user.service";
 import { HandlerType } from "../types/handlers";
 import { getRedirectUrlForFolder } from "../utils/helpers/getRedirectUrlForFolder";
 import { splitFileName } from "../utils/helpers/splitFileName";
-import cloudinary from "../config/cloudinary.config";
 import axios from "axios";
-import fs from "fs";
 
 const upload_file_post: HandlerType = async (req, res, next) => {
   try {
