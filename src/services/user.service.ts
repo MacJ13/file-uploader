@@ -3,6 +3,13 @@ import prisma from "../config/prisma.config";
 
 type User = { username: string; email: string; password: string };
 
+const generateHashPassword = (password: string) => {
+  const salt = brcypt.genSaltSync(10);
+  const hash = brcypt.hashSync(password, salt);
+
+  return hash;
+};
+
 export const findUserByName = async (username: string) => {
   const user = await prisma.user.findUnique({
     where: {
@@ -35,8 +42,7 @@ export const findUserByEmail = async (email: string) => {
 
 export const saveUser = async (user: User) => {
   // 1. generate a salt and hash password
-  const salt = brcypt.genSaltSync(10);
-  const hash = brcypt.hashSync(user.password, salt);
+  const hash = generateHashPassword(user.password);
 
   //2 . create user with prsima
   await prisma.user.create({
@@ -85,4 +91,17 @@ export const verifyUserPassword = (
   const match = brcypt.compare(password, hash);
 
   return match;
+};
+
+export const changeUserPassword = async (id: number, password: string) => {
+  // generate hash
+  const hash = generateHashPassword(password);
+
+  // modify user password
+  const pass = await prisma.user.update({
+    where: { id: id },
+    data: {
+      password: hash,
+    },
+  });
 };
