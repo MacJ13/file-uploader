@@ -23,4 +23,7 @@ userRouter.post(
   }),
   userController.change_password_post
 );
+
+userRouter.get("/delete", userController.user_delete_get);
+
 export default userRouter;

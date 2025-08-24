@@ -51,9 +51,20 @@ const change_password_post: HandlerType = async (req, res, next) => {
   res.redirect("/user/settings");
 };
 
+const user_delete_get: HandlerType = async (req, res, next) => {
+  const user = req.user as User;
+
+  res.render("pages/deleteForm", {
+    title: "delete user",
+    user: user,
+    action: "/user/delete",
+  });
+};
+
 export default {
   get_user_dashboard,
   get_user_settings,
   change_password_get,
   change_password_post,
+  user_delete_get,
 };
