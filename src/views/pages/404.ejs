@@ -4,7 +4,7 @@
  <%- include("../partials/navigation.ejs") %>
 <main>
   <div class="text-center">
-      <h1 class="text-4xl font-bold mb-4 uppercase">Page not exist. 404</h1>
+      <h1 class="text-4xl font-bold mb-4 uppercase"><%= locals.message ? locals.message :'Unknown Error' %>. <%= locals.statusCode ? locals.statusCode : 404 %></h1>
       <!-- <p class="font-bold ">To fully page experience 
         <br/>
         you must <a class="underline decoration-2" href="#">register</a>  or <a class="underline decoration-2" href="#">login</a> to the page
