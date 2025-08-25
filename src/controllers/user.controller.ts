@@ -1,10 +1,18 @@
+import path from "path";
 import { User } from "../../generated/prisma";
 import {
+  deletePhysicalFile,
+  getFileResourcesByPath,
+} from "../services/file.service";
+import {
   changeUserPassword,
+  deleteUser,
   getDashboardItems,
   verifyUserPassword,
 } from "../services/user.service";
 import { HandlerType } from "../types/handlers";
+import { normalizeFolderName } from "../utils/helpers/normalizeFolderName";
+import { deleteResourceFolder } from "../services/folder.service";
 
 const get_user_dashboard: HandlerType = async (req, res, next) => {
   // console.log(req.user);
@@ -80,7 +88,32 @@ const user_delete_post: HandlerType = async (req, res, next) => {
       return;
     }
 
-    res.redirect("/");
+    const mainUserPath = normalizeFolderName(path.join("files", user.username));
+
+    const resourcesFiles = await getFileResourcesByPath(mainUserPath);
+
+    if (resourcesFiles.length) {
+      for (const file of resourcesFiles) {
+        const filePublicId = file.public_id;
+        const fileResourceType = file.resource_type;
+
+        await deletePhysicalFile(filePublicId, fileResourceType);
+      }
+      await deleteResourceFolder(mainUserPath);
+    }
+
+    await deleteUser(user.id);
+
+    req.logOut((err) => {
+      if (err) return next(err);
+
+      req.session.destroy((err) => {
+        if (err) return next(err);
+
+        res.clearCookie("connect.sid");
+        res.redirect("/");
+      });
+    });
   } catch (err) {
     next(err);
   }

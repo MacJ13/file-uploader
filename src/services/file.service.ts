@@ -115,9 +115,17 @@ export const deleteFile = async (id: number) => {
 export const deleteFileWithPhysicalRemove = async (id: number) => {
   const file = await deleteFile(id);
 
-  await cloudinary.uploader.destroy(file.path, { resource_type: file.type });
-  // await fs.unlink(file.path);
+  console.log({ file });
+
+  await deletePhysicalFile(file.path, file.type);
   return file;
+};
+
+export const deletePhysicalFile = async (
+  path: string,
+  resourceType: string
+) => {
+  await cloudinary.uploader.destroy(path, { resource_type: resourceType });
 };
 
 const updateCloudFileName = async (id: number, newFileName: string) => {

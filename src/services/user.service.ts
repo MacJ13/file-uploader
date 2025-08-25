@@ -54,6 +54,10 @@ export const saveUser = async (user: User) => {
   });
 };
 
+export const deleteUser = async (userId: number) => {
+  await prisma.user.delete({ where: { id: userId } });
+};
+
 export const getDashboardItems = async (userId: number) => {
   const [files, folders] = await Promise.all([
     await prisma.file.findMany({
