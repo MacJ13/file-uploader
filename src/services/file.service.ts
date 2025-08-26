@@ -5,26 +5,32 @@ import { parseFilePath } from "../utils/helpers/parseFilePath";
 import { normalizeFolderName } from "../utils/helpers/normalizeFolderName";
 import cloudinary from "../config/cloudinary.config";
 import { FileCreationType, FileResourceType } from "../types/file";
+import CustomError from "../utils/errors/CustomError";
 
 export const resolveUploadPath = async (
   username: string,
   folderId: number | null
 ) => {
+  try {
+    let path = "";
+
+    if (!folderId) {
+      path = `files/${username}/`;
+    } else path = (await getFolderPathFromDB(username, folderId)) + "/";
+
+    // console.log(path);
+    // 2. create directory is necessery
+    // await fs.mkdir(path, { recursive: true });
+
+    const properPath = normalizeFolderName(path);
+    // 3. return path
+    return properPath;
+  } catch (err) {
+    if (err instanceof CustomError) {
+      throw err;
+    } else throw new CustomError("Database internal error", 500);
+  }
   // 1. set path where we have to save files
-
-  let path = "";
-
-  if (!folderId) {
-    path = `files/${username}/`;
-  } else path = (await getFolderPathFromDB(username, folderId)) + "/";
-
-  // console.log(path);
-  // 2. create directory is necessery
-  // await fs.mkdir(path, { recursive: true });
-
-  const properPath = normalizeFolderName(path);
-  // 3. return path
-  return properPath;
 };
 
 export const uploadFileStream = async (
@@ -33,7 +39,6 @@ export const uploadFileStream = async (
 ) => {
   const base = file.originalname.replace(/\.[^/.]+$/, ""); // "esp2"
 
-  console.log(file);
   return new Promise((resolve, reject) => {
     const result = cloudinary.uploader.upload_stream(
       {
@@ -57,68 +62,92 @@ export const uploadFileStream = async (
 };
 
 export const saveFileToDB = async (fileCreation: FileCreationType) => {
-  const ext = fileCreation.originalname.split(".").pop() || "";
+  try {
+    const ext = fileCreation.originalname.split(".").pop() || "";
 
-  await prisma.file.create({
-    data: {
-      name: fileCreation.originalname,
-      path: fileCreation.public_id,
-      size: fileCreation.size,
-      type: fileCreation.resource_type,
-      format: ext,
-      userId: fileCreation.userId,
-      folderId: fileCreation.folderId,
-    },
-  });
+    await prisma.file.create({
+      data: {
+        name: fileCreation.originalname,
+        path: fileCreation.public_id,
+        size: fileCreation.size,
+        type: fileCreation.resource_type,
+        format: ext,
+        userId: fileCreation.userId,
+        folderId: fileCreation.folderId,
+      },
+    });
+  } catch (err) {
+    throw new CustomError("Database error while saving file", 500);
+  }
 };
 
 export const getUserFiles = async (
   userId: number,
   folderId: number | null = null
 ) => {
-  const files = await prisma.file.findMany({
-    where: { userId: userId },
-    select: {
-      id: true,
-      name: true,
-      created_at: true,
-      folder: { select: { name: true } },
-    },
-    orderBy: { created_at: "desc" },
-  });
+  try {
+    const files = await prisma.file.findMany({
+      where: { userId: userId },
+      select: {
+        id: true,
+        name: true,
+        created_at: true,
+        folder: { select: { name: true } },
+      },
+      orderBy: { created_at: "desc" },
+    });
 
-  return files;
+    return files;
+  } catch (err) {
+    throw new CustomError("Database error while fetching file list", 500);
+  }
 };
 
 export const getFileById = async (id: number) => {
-  const file = await prisma.file.findUnique({
-    where: { id: id },
-    select: {
-      name: true,
-      id: true,
-      size: true,
-      path: true,
-      type: true,
-      format: true,
-      created_at: true,
-      folder: { select: { name: true, id: true } },
-    },
-  });
+  try {
+    const file = await prisma.file.findUnique({
+      where: { id: id },
+      select: {
+        name: true,
+        id: true,
+        size: true,
+        path: true,
+        type: true,
+        format: true,
+        created_at: true,
+        folder: { select: { name: true, id: true } },
+      },
+    });
 
-  return file;
+    return file;
+  } catch (err) {
+    throw new CustomError("Database error while fetching file by id", 500);
+  }
 };
 
 export const deleteFile = async (id: number) => {
-  return await prisma.file.delete({ where: { id: id } });
+  try {
+    return await prisma.file.delete({ where: { id: id } });
+  } catch (err) {
+    throw new CustomError("Database error while deleting file", 500);
+  }
 };
 
 export const deleteFileWithPhysicalRemove = async (id: number) => {
-  const file = await deleteFile(id);
+  try {
+    const file = await deleteFile(id);
 
-  console.log({ file });
-
-  await deletePhysicalFile(file.path, file.type);
-  return file;
+    await deletePhysicalFile(file.path, file.type);
+    return file;
+  } catch (err) {
+    if (err instanceof CustomError) {
+      throw err;
+    } else
+      throw new CustomError(
+        "Internal Service Error while deleting file process",
+        500
+      );
+  }
 };
 
 export const deletePhysicalFile = async (
@@ -131,7 +160,7 @@ export const deletePhysicalFile = async (
 const updateCloudFileName = async (id: number, newFileName: string) => {
   const file = await getFileById(id);
 
-  if (!file) throw new Error("file do not exist");
+  if (!file) throw new CustomError("File do not exist", 404);
 
   const folderPath =
     file.path.lastIndexOf("/") >= 0
@@ -161,12 +190,16 @@ export const updateFileNameInDB = async (
   fileName: string,
   newPath: string
 ) => {
-  const updatedFile = await prisma.file.update({
-    where: { id: id },
-    data: { name: fileName, path: newPath },
-  });
+  try {
+    const updatedFile = await prisma.file.update({
+      where: { id: id },
+      data: { name: fileName, path: newPath },
+    });
 
-  return updatedFile;
+    return updatedFile;
+  } catch (err) {
+    throw new CustomError("Database error while updating file name", 500);
+  }
 };
 
 export const updateFile = async (id: number, fileName: string) => {
@@ -184,11 +217,15 @@ export const updateFile = async (id: number, fileName: string) => {
 };
 
 export const replaceFilePath = async (oldPath: string, newPath: string) => {
-  await prisma.$executeRaw`
-    UPDATE "File"
-    SET "path" = REPLACE("path", ${oldPath}, ${newPath})
-    WHERE "path" LIKE '%' || ${oldPath} || '%'
-  `;
+  try {
+    await prisma.$executeRaw`
+  UPDATE "File"
+  SET "path" = REPLACE("path", ${oldPath}, ${newPath})
+  WHERE "path" LIKE '%' || ${oldPath} || '%'
+`;
+  } catch (err) {
+    throw new CustomError("Database error while replace file path", 500);
+  }
 };
 
 export const getFileUrl = async (path: string, resourceType: string) => {
