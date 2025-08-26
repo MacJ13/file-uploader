@@ -1,80 +1,102 @@
 import path from "path";
 import prisma from "../config/prisma.config";
-import fsExtra from "fs-extra";
-import fs from "fs";
 import cloudinary from "../config/cloudinary.config";
 import { normalizeFolderName } from "../utils/helpers/normalizeFolderName";
 import { replaceFilePath } from "./file.service";
+import CustomError from "../utils/errors/CustomError";
 
 export const createFolder = async (
   title: string,
   userId: number,
   parentFolderId?: number | null
 ) => {
-  await prisma.folder.create({
-    data: {
-      name: title,
-      userId: userId,
-      parentFolderId: parentFolderId ?? null,
-    },
-  });
+  try {
+    await prisma.folder.create({
+      data: {
+        name: title,
+        userId: userId,
+        parentFolderId: parentFolderId ?? null,
+      },
+    });
+  } catch (err) {
+    throw new CustomError("Database error while creating folder", 500);
+  }
 };
 
 export const getUserFolders = async (
   userId: number,
   parentFolderId: number | null = null
 ) => {
-  const folders = await prisma.folder.findMany({
-    where: { userId: userId, parentFolderId: parentFolderId },
-    select: { id: true, name: true, parentFolderId: true, created_at: true },
-    orderBy: { created_at: "desc" },
-  });
+  try {
+    const folders = await prisma.folder.findMany({
+      where: { userId: userId, parentFolderId: parentFolderId },
+      select: { id: true, name: true, parentFolderId: true, created_at: true },
+      orderBy: { created_at: "desc" },
+    });
 
-  return folders;
+    return folders;
+  } catch (err) {
+    throw new CustomError("Database error while fetching user folders", 500);
+  }
 };
 
 export const getFolderById = async (id: number) => {
-  const folder = await prisma.folder.findUnique({
-    where: { id: id },
-    select: {
-      id: true,
-      name: true,
-      parentFolderId: true,
-      parentFolder: { select: { id: true, name: true } },
-      subfolders: {
-        select: { id: true, name: true, created_at: true },
-        orderBy: { created_at: "desc" },
-      },
-      files: {
-        select: {
-          id: true,
-          name: true,
-          created_at: true,
-          path: true,
-          folder: { select: { name: true } },
+  try {
+    const folder = await prisma.folder.findUnique({
+      where: { id: id },
+      select: {
+        id: true,
+        name: true,
+        parentFolderId: true,
+        parentFolder: { select: { id: true, name: true } },
+        subfolders: {
+          select: { id: true, name: true, created_at: true },
+          orderBy: { created_at: "desc" },
         },
-        orderBy: { created_at: "desc" },
+        files: {
+          select: {
+            id: true,
+            name: true,
+            created_at: true,
+            path: true,
+            folder: { select: { name: true } },
+          },
+          orderBy: { created_at: "desc" },
+        },
       },
-    },
-  });
+    });
 
-  return folder;
+    return folder;
+  } catch (err) {
+    throw new CustomError("Database error while fetching folder by id", 500);
+  }
 };
 
 export const updateFolderVisitedDate = async (id: number) => {
-  await prisma.folder.update({
-    where: { id: id },
-    data: { visited_at: new Date() },
-  });
+  try {
+    await prisma.folder.update({
+      where: { id: id },
+      data: { visited_at: new Date() },
+    });
+  } catch (err) {
+    throw new CustomError(
+      "Database error while updating folder visited date",
+      500
+    );
+  }
 };
 
 export const getFolderName = async (id: number) => {
-  const folder = await prisma.folder.findUnique({
-    where: { id: id },
-    select: { name: true },
-  });
+  try {
+    const folder = await prisma.folder.findUnique({
+      where: { id: id },
+      select: { name: true },
+    });
 
-  return folder?.name as string;
+    return folder?.name as string;
+  } catch (err) {
+    throw new CustomError("Database error while fetching name folder", 500);
+  }
 };
 
 export const updateFolder = async (
@@ -84,48 +106,13 @@ export const updateFolder = async (
 ) => {
   // 1. get folder by id
 
-  // const folder = await getFolderById(id);
-
   // 3. get full old path and create below new full path
-  const oldPath = await getFolderPathFromDB(username, id);
+  const oldPath = (await getFolderPathFromDB(username, id)) as string;
 
   const newPath = path.join(path.dirname(oldPath), newFolderName);
 
-  // if (oldPath === newPath) {
-  //   return;
-  // }
-
   const properOldPath = normalizeFolderName(oldPath);
   const properNewPath = normalizeFolderName(newPath);
-  // console.log({ properOldPath, properNewPath });
-
-  // const result = await prisma.$queryRaw`
-  // SELECT * FROM "File" WHERE "path" LIKE '%' || ${properOldPath} || '%'
-  // `;
-  // console.log({ result });
-  // const properNewPath = normalizeFolderName(newPath);
-
-  // const files = await cloudinary.api.resources({
-  //   type: "upload",
-  //   prefix: `${properOldPath}`,
-  //   resource_type: "raw",
-  // });
-  // console.log(files);
-
-  // const oldPrefix = properOldPath; // np. "files/user12/folder_test"
-  // const newPrefix = properNewPath; // np. "files/user12/folder_update"
-
-  // for (const file of files.resources) {
-  //   const newPublicId = file.public_id.replace(oldPrefix, newPrefix);
-
-  //   console.log(newPublicId);
-  //   // console.log(newPublicId);
-
-  //   await cloudinary.uploader.rename(file.public_id, newPublicId, {
-  //     resource_type: file.resource_type,
-  //     overwrite: true,
-  //   });
-  // }
 
   await updateFolderName(id, newFolderName);
 
@@ -133,23 +120,35 @@ export const updateFolder = async (
 };
 
 export const updateFolderName = async (id: number, newFolderName: string) => {
-  await prisma.folder.update({
-    where: { id: id },
-    data: { name: newFolderName },
-  });
+  try {
+    await prisma.folder.update({
+      where: { id: id },
+      data: { name: newFolderName },
+    });
+  } catch (err) {
+    throw new CustomError("Database error while updating folder name", 500);
+  }
 };
 
 export const getParentFolder = async (id: number) => {
-  const folder = await prisma.folder.findUnique({
-    where: { id: id },
-    select: { parentFolder: { select: { id: true, name: true } } },
-  });
+  try {
+    const folder = await prisma.folder.findUnique({
+      where: { id: id },
+      select: { parentFolder: { select: { id: true, name: true } } },
+    });
 
-  return folder ? folder.parentFolder : null;
+    return folder ? folder.parentFolder : null;
+  } catch (err) {
+    throw new CustomError("Database error while fething parent folder", 500);
+  }
 };
 
 export const deleteFolder = async (id: number) => {
-  return await prisma.folder.delete({ where: { id: id } });
+  try {
+    return await prisma.folder.delete({ where: { id: id } });
+  } catch (err) {
+    throw new CustomError("Database error while deleting folder", 500);
+  }
 };
 
 const getFullPathFolderDirectory = (username: string, parts: string[]) => {
@@ -161,21 +160,25 @@ const getFullPathFolderDirectory = (username: string, parts: string[]) => {
 export const getFolderPathFromDB = async (
   username: string,
   folderId: number
-): Promise<string> => {
-  let parts: string[] = [];
+): Promise<string | undefined> => {
+  try {
+    let parts: string[] = [];
+    let currentFolder = await getFolderById(folderId);
 
-  let currentFolder = await getFolderById(folderId);
+    while (currentFolder) {
+      parts.unshift(currentFolder.name);
 
-  while (currentFolder) {
-    parts.unshift(currentFolder.name);
+      if (!currentFolder.parentFolderId) break;
+      currentFolder = await getFolderById(currentFolder.parentFolderId);
+    }
 
-    if (!currentFolder.parentFolderId) break;
-    currentFolder = await getFolderById(currentFolder.parentFolderId);
+    const fullPath = getFullPathFolderDirectory(username, parts);
+
+    return fullPath;
+  } catch (err) {
+    if (err instanceof CustomError) throw err;
+    else new CustomError("Database Internal Error", 500);
   }
-
-  const fullPath = getFullPathFolderDirectory(username, parts);
-
-  return fullPath;
 };
 
 export const removeCloudFolder = async (
@@ -213,59 +216,3 @@ export const updateResourceAssetFolder = async (
 export const deleteResourceFolder = async (path: string) => {
   await cloudinary.api.delete_folder(path);
 };
-
-// update all file with path like oldFoldername in string
-// await prisma.$executeRaw`
-//   UPDATE "File"
-//   SET "path" = REPLACE("path", ${oldFolderName}, ${newFolderName})
-//   WHERE "path" LIKE '%' || ${oldFolderName} || '%'
-// `;
-
-// for (const file of files.resources) {
-//   // console.log(file);
-
-//   const properOldFolderName = normalizeFolderName(oldFolderName);
-//   const properNewFolderName = normalizeFolderName(newFolderName);
-
-//   const newPublicId = file.public_id.replace(
-//     properOldFolderName,
-//     properNewFolderName
-//   );
-
-//   console.log(newPublicId, file.public.id);
-
-//   // await cloudinary.uploader.rename(file.public_id, newPublicId, {
-//   //   resource_type: file.resource_type,
-//   //   overwrite: true,
-//   // });
-
-//   // console.log(file.public_id, newPublicId);
-// }
-
-// folder?.files.forEach((file) => {
-//   console.log(file);
-// });
-//   await prisma.folder.update({
-//   where: { id: id },
-//   data: { name: newFolderName },
-// });
-//   await prisma.folder.update({
-//   where: { id: id },
-//   data: { name: newFolderName },
-// });
-
-// files.resources.forEach((file) => {
-//   console.log(file);
-// });
-
-// if (fs.existsSync(oldPath)) {
-//   await fsExtra.copy(oldPath, newPath);
-//   await fsExtra.remove(oldPath);
-// }
-
-// update all file with path like oldFoldername in string
-// await prisma.$executeRaw`
-//   UPDATE "File"
-//   SET "path" = REPLACE("path", ${oldFolderName}, ${newFolderName})
-//   WHERE "path" LIKE '%' || ${oldFolderName} || '%'
-// `;
