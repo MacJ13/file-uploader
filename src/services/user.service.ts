@@ -1,5 +1,6 @@
 import brcypt from "bcrypt";
 import prisma from "../config/prisma.config";
+import CustomError from "../utils/errors/CustomError";
 
 type User = { username: string; email: string; password: string };
 
@@ -11,6 +12,13 @@ const generateHashPassword = (password: string) => {
 };
 
 export const findUserByName = async (username: string) => {
+  try {
+  } catch (err) {
+    throw new CustomError(
+      "Database error while fetching user data by name",
+      500
+    );
+  }
   const user = await prisma.user.findUnique({
     where: {
       username: username,
@@ -21,71 +29,93 @@ export const findUserByName = async (username: string) => {
 };
 
 export const findUserById = async (id: number) => {
-  const user = await prisma.user.findUnique({
-    where: {
-      id: id,
-    },
-  });
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: id,
+      },
+    });
 
-  return user;
+    return user;
+  } catch (err) {
+    throw new CustomError("Database error while fetching user data by id", 500);
+  }
 };
 
 export const findUserByEmail = async (email: string) => {
-  const user = await prisma.user.findUnique({
-    where: {
-      email: email,
-    },
-  });
-
-  return user;
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        email: email,
+      },
+    });
+    return user;
+  } catch (err) {
+    throw new CustomError(
+      "Database error while fetching user data by email",
+      500
+    );
+  }
 };
 
 export const saveUser = async (user: User) => {
-  // 1. generate a salt and hash password
-  const hash = generateHashPassword(user.password);
-
-  //2 . create user with prsima
-  await prisma.user.create({
-    data: {
-      username: user.username,
-      email: user.email,
-      password: hash,
-    },
-  });
+  try {
+    // 1. generate a salt and hash password
+    const hash = generateHashPassword(user.password);
+    //2 . create user with prsima
+    await prisma.user.create({
+      data: {
+        username: user.username,
+        email: user.email,
+        password: hash,
+      },
+    });
+  } catch (err) {
+    throw new CustomError("Database error while creating user", 500);
+  }
 };
 
 export const deleteUser = async (userId: number) => {
-  await prisma.user.delete({ where: { id: userId } });
+  try {
+    await prisma.user.delete({ where: { id: userId } });
+  } catch (err) {
+    console.log(err);
+    throw new CustomError("Database error white deleting user", 500);
+  }
 };
 
 export const getDashboardItems = async (userId: number) => {
-  const [files, folders] = await Promise.all([
-    await prisma.file.findMany({
-      where: { userId: userId },
-      select: {
-        name: true,
-        id: true,
-        created_at: true,
-        folder: { select: { name: true } },
-      },
-      orderBy: [{ created_at: "desc" }],
-      take: 5,
-    }),
-    await prisma.folder.findMany({
-      where: { userId: userId },
-      select: {
-        id: true,
-        name: true,
-        parentFolder: true,
-      },
-      orderBy: {
-        visited_at: "desc",
-      },
-      take: 5,
-    }),
-  ]);
+  try {
+    const [files, folders] = await Promise.all([
+      await prisma.file.findMany({
+        where: { userId: userId },
+        select: {
+          name: true,
+          id: true,
+          created_at: true,
+          folder: { select: { name: true } },
+        },
+        orderBy: [{ created_at: "desc" }],
+        take: 5,
+      }),
+      await prisma.folder.findMany({
+        where: { userId: userId },
+        select: {
+          id: true,
+          name: true,
+          parentFolder: true,
+        },
+        orderBy: {
+          visited_at: "desc",
+        },
+        take: 5,
+      }),
+    ]);
 
-  return [folders, files];
+    return [folders, files];
+  } catch (err) {
+    throw new CustomError("Database error while fetching dashboard items", 500);
+  }
 };
 
 export const verifyUserPassword = (
@@ -98,14 +128,18 @@ export const verifyUserPassword = (
 };
 
 export const changeUserPassword = async (id: number, password: string) => {
-  // generate hash
-  const hash = generateHashPassword(password);
+  try {
+    // generate hash
+    const hash = generateHashPassword(password);
 
-  // modify user password
-  const pass = await prisma.user.update({
-    where: { id: id },
-    data: {
-      password: hash,
-    },
-  });
+    // modify user password
+    await prisma.user.update({
+      where: { id: id },
+      data: {
+        password: hash,
+      },
+    });
+  } catch (err) {
+    throw new CustomError("Database error while changing user password", 500);
+  }
 };
