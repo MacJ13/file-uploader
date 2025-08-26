@@ -2,6 +2,7 @@ import passport from "passport";
 import { Request } from "express";
 import { User } from "../../generated/prisma";
 import { AsyncHandlerType } from "../types/handlers";
+import CustomError from "../utils/errors/CustomError";
 
 export const authenticateLocal: AsyncHandlerType<{
   user: User | false;
@@ -10,8 +11,10 @@ export const authenticateLocal: AsyncHandlerType<{
   return new Promise((resolve, reject) => {
     passport.authenticate(
       "local",
-      (err: Error, user: User | false, info: { message: string }) => {
-        if (err) return reject(err);
+      (err: CustomError, user: User | false, info: { message: string }) => {
+        if (err) {
+          return reject(new CustomError("Authentication server error", 500));
+        }
         return resolve({ user: user || false, info: info! });
       }
     )(req, res, next);
@@ -20,7 +23,11 @@ export const authenticateLocal: AsyncHandlerType<{
 
 export const loginUser = (req: Request, user: User): Promise<void> => {
   return new Promise<void>((resolve, reject) => {
-    req.logIn(user, (err) => (err ? reject(err) : resolve()));
+    req.logIn(user, (err) =>
+      err
+        ? reject(new CustomError("Authentication server error", 500))
+        : resolve()
+    );
   });
 };
 
