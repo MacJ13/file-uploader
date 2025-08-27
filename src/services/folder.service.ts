@@ -104,19 +104,25 @@ export const updateFolder = async (
   id: number,
   username: string
 ) => {
-  // 1. get folder by id
+  try {
+    // 1. get folder by id
 
-  // 3. get full old path and create below new full path
-  const oldPath = (await getFolderPathFromDB(username, id)) as string;
+    // 3. get full old path and create below new full path
+    const oldPath = (await getFolderPathFromDB(username, id)) as string;
 
-  const newPath = path.join(path.dirname(oldPath), newFolderName);
+    const newPath = path.join(path.dirname(oldPath), newFolderName);
 
-  const properOldPath = normalizeFolderName(oldPath);
-  const properNewPath = normalizeFolderName(newPath);
+    const properOldPath = normalizeFolderName(oldPath);
+    const properNewPath = normalizeFolderName(newPath);
 
-  await updateFolderName(id, newFolderName);
+    await updateFolderName(id, newFolderName);
 
-  await replaceFilePath(properOldPath, properNewPath);
+    await replaceFilePath(properOldPath, properNewPath);
+  } catch (err) {
+    if (err instanceof CustomError) {
+      throw err;
+    } else throw new CustomError("Internal Database Error", 500);
+  }
 };
 
 export const updateFolderName = async (id: number, newFolderName: string) => {
@@ -185,9 +191,13 @@ export const removeCloudFolder = async (
   public_id: string,
   resource_type: string
 ) => {
-  await cloudinary.uploader.destroy(public_id, {
-    resource_type: resource_type,
-  });
+  try {
+    await cloudinary.uploader.destroy(public_id, {
+      resource_type: resource_type,
+    });
+  } catch (error) {
+    throw new CustomError("Failed to remove Cloudinary folder", 500);
+  }
 };
 
 export const renameResourceFolder = async (
@@ -195,11 +205,15 @@ export const renameResourceFolder = async (
   newPublicId: string,
   resourceType: string
 ) => {
-  await cloudinary.uploader.rename(oldPublicId, newPublicId, {
-    resource_type: resourceType,
-    overwrite: true,
-    invalidate: true,
-  });
+  try {
+    await cloudinary.uploader.rename(oldPublicId, newPublicId, {
+      resource_type: resourceType,
+      overwrite: true,
+      invalidate: true,
+    });
+  } catch (error) {
+    throw new CustomError("Failed to rename Cloudinary resource folder", 500);
+  }
 };
 
 export const updateResourceAssetFolder = async (
@@ -207,12 +221,23 @@ export const updateResourceAssetFolder = async (
   resourceType: string,
   assetFolder: string
 ) => {
-  await cloudinary.api.update(newPublicId, {
-    resource_type: resourceType,
-    asset_folder: assetFolder,
-  });
+  try {
+    await cloudinary.api.update(newPublicId, {
+      resource_type: resourceType,
+      asset_folder: assetFolder,
+    });
+  } catch (error) {
+    throw new CustomError(
+      "Failed to update Cloudinary resource asset folder",
+      500
+    );
+  }
 };
 
 export const deleteResourceFolder = async (path: string) => {
-  await cloudinary.api.delete_folder(path);
+  try {
+    await cloudinary.api.delete_folder(path);
+  } catch (error) {
+    throw new CustomError("Failed to delete Cloudinary resource folder", 500);
+  }
 };

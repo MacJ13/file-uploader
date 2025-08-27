@@ -15,6 +15,7 @@ import { HandlerType } from "../types/handlers";
 import { getRedirectUrlForFolder } from "../utils/helpers/getRedirectUrlForFolder";
 import { splitFileName } from "../utils/helpers/splitFileName";
 import axios from "axios";
+import CustomError from "../utils/errors/CustomError";
 
 const upload_file_post: HandlerType = async (req, res, next) => {
   try {
@@ -22,7 +23,7 @@ const upload_file_post: HandlerType = async (req, res, next) => {
     const folderId = req.body.folderId ? +req.body.folderId : null;
     const file = req.file;
 
-    if (!file) throw new Error();
+    if (!file) throw new CustomError("File not found", 404);
 
     const folderName = await resolveUploadPath(user.username, folderId);
 
@@ -75,13 +76,16 @@ const file_detail: HandlerType = async (req, res, next) => {
 
 const file_list: HandlerType = async (req, res, next) => {
   const user = req.user as User;
-
-  const files = await getUserFiles(+user.id);
-  res.render("pages/fileList", {
-    title: "file list",
-    user: user,
-    files: files,
-  });
+  try {
+    const files = await getUserFiles(+user.id);
+    res.render("pages/fileList", {
+      title: "file list",
+      user: user,
+      files: files,
+    });
+  } catch (err) {
+    next(err);
+  }
 };
 
 const file_delete_get: HandlerType = async (req, res, next) => {
@@ -150,61 +154,21 @@ const file_update_post: HandlerType = async (req, res, next) => {
 
   const { title } = req.body;
 
-  await updateFile(fileId, title);
+  try {
+    await updateFile(fileId, title);
 
-  res.redirect(`/file/${fileId}`);
+    res.redirect(`/file/${fileId}`);
+  } catch (err) {
+    next(err);
+  }
 };
-
-// const file_download_get: HandlerType = async (req, res, next) => {
-//   // get fileId from params
-//   const fileID = +req.params.fileId;
-
-//   try {
-//     const file = await getFileById(fileID);
-
-//     const filePath = file?.path as string;
-//     const fileName = file?.name as string;
-
-//     const fileUrl = await getFileUrl(filePath);
-
-//     const head = await axios.head(fileUrl);
-
-//     const contentType =
-//       head.headers["content-type"] || "application/octet-stream";
-//     const contentLength = head.headers["content-length"];
-
-//     // fs.writeFileSync(fileName, response.data);
-
-//     res.setHeader("Content-Disposition", `attachment; filename="${fileName}"`);
-//     res.setHeader("Content-Type", contentType);
-//     if (contentLength) {
-//       res.setHeader("Content-Length", contentLength);
-//     }
-
-//     // res.redirect("/");
-
-//     const response = await axios.get(fileUrl, {
-//       responseType: "stream",
-//     });
-
-//     response.data.on("error", (err: any) => next(err));
-//     response.data.on("end", () => res.end());
-
-//     response.data.pipe(res);
-
-//     res.redirect("/");
-//     // response.data.pipe(res);
-//   } catch (err) {
-//     next(err);
-//   }
-// };
 
 const file_download_get: HandlerType = async (req, res, next) => {
   try {
     const fileID = +req.params.fileId;
     const file = await getFileById(fileID);
 
-    if (!file) return res.status(404).send("File not found");
+    if (!file) throw new CustomError("File not found", 404);
 
     const filePath = file.path as string;
     const fileName = file.name as string;
@@ -225,7 +189,9 @@ const file_download_get: HandlerType = async (req, res, next) => {
 
     response.data.pipe(res);
 
-    response.data.on("error", (err: any) => next(err));
+    response.data.on("error", (err: any) =>
+      next(new CustomError("Error while donwloading file from server", 500))
+    );
     response.data.on("end", () => res.end());
     // res.redirect("/");
   } catch (err) {
@@ -243,23 +209,3 @@ export default {
   file_update_post,
   file_download_get,
 };
-
-//
-// id
-// name: originalName,
-// path: path
-// size: size
-// type : mimetype
-// userId: user.id
-// folder: folder.id
-
-// [1] {
-// [1]   fieldname: 'file',
-// [1]   originalname: 'image.jpg',
-// [1]   encoding: '7bit',
-// [1]   mimetype: 'image/jpeg',
-// [1]   destination: 'public\\files\\user12\\update innder folder',
-// [1]   filename: 'image.jpg',
-// [1]   path: 'public\\files\\user12\\update innder folder\\image.jpg',
-// [1]   size: 39987
-// [1] }

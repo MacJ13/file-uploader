@@ -133,7 +133,10 @@ const folder_update_post: HandlerType = async (req, res, next) => {
     const folderName = await getFolderName(+folderId);
     const properFolderName = normalizeFolderName(folderName);
 
-    const folderPath = await getFolderPathFromDB(user.username, +folderId);
+    const folderPath = (await getFolderPathFromDB(
+      user.username,
+      +folderId
+    )) as string;
     // const newFolderPath = replaceSubstring(folderPath, folderName, title);
 
     const properPath = normalizeFolderName(folderPath);
@@ -176,7 +179,7 @@ const folder_update_post: HandlerType = async (req, res, next) => {
 
     res.redirect(`/folder/${folderId}`);
   } catch (err) {
-    console.log(err);
+    next(err);
   }
 };
 
@@ -209,7 +212,10 @@ const folder_delete_post: HandlerType = async (req, res, next) => {
       });
       return;
     }
-    const path = await getFolderPathFromDB(user.username, +folderId);
+    const path = (await getFolderPathFromDB(
+      user.username,
+      +folderId
+    )) as string;
 
     const properPath = normalizeFolderName(path);
 

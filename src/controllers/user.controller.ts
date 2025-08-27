@@ -52,12 +52,16 @@ const change_password_get: HandlerType = async (req, res, next) => {
 };
 
 const change_password_post: HandlerType = async (req, res, next) => {
-  const user = req.user as User;
-  const formPassword = req.body.password;
+  try {
+    const user = req.user as User;
+    const formPassword = req.body.password;
 
-  await changeUserPassword(user.id, formPassword);
+    await changeUserPassword(user.id, formPassword);
 
-  res.redirect("/user/settings");
+    res.redirect("/user/settings");
+  } catch (err) {
+    next(err);
+  }
 };
 
 const user_delete_get: HandlerType = async (req, res, next) => {

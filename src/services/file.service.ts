@@ -48,8 +48,7 @@ export const uploadFileStream = async (
       },
       async (error, result) => {
         if (error) {
-          console.error("Cloudinary error:", error);
-          reject(new Error("Something happened while uploading file"));
+          reject(new CustomError("Failed to upload file stream", 500));
           // throw new Error("something happend to upload file");
         }
 
@@ -210,7 +209,9 @@ export const updateFile = async (id: number, fileName: string) => {
 
     await updateFileNameInDB(id, fileName, public_id);
   } catch (err) {
-    console.log(err);
+    if (err instanceof CustomError) throw err;
+    else
+      throw new CustomError("Internal server error while updating file", 500);
   }
 
   // await fs.rename(filePath, updatedFile.path);
@@ -229,52 +230,64 @@ export const replaceFilePath = async (oldPath: string, newPath: string) => {
 };
 
 export const getFileUrl = async (path: string, resourceType: string) => {
-  const cloudFile = await cloudinary.api.resource(path, {
-    type: "upload",
-    resource_type: resourceType,
-    secure: true,
-  });
+  try {
+    const cloudFile = await cloudinary.api.resource(path, {
+      type: "upload",
+      resource_type: resourceType,
+      secure: true,
+    });
 
-  return cloudFile.secure_url as string;
+    return cloudFile.secure_url as string;
+  } catch (error) {
+    throw new CustomError("Failed to fetch file resource url", 500);
+  }
 };
 
 export const getFileResources = async (path: string) => {
-  const files = await cloudinary.api.resources({
-    type: "upload",
-    prefix: path,
-    resource_type: "raw",
-  });
+  try {
+    const files = await cloudinary.api.resources({
+      type: "upload",
+      prefix: path,
+      resource_type: "raw",
+    });
 
-  return files.resources;
+    return files.resources;
+  } catch (error) {
+    throw new CustomError("Failed to fetch file resources", 500);
+  }
 };
 
-export const getFileResource = async (path: string) => {
-  const file = await cloudinary.api.resource(path);
+// export const getFileResource = async (path: string) => {
+//   const file = await cloudinary.api.resource(path);
 
-  return file;
-};
+//   return file;
+// };
 
 export const getFileResourcesByPath = async (path: string) => {
-  const resourceTypes: FileResourceType[] = ["image", "video", "raw"];
-  const allFiles = [];
+  try {
+    const resourceTypes: FileResourceType[] = ["image", "video", "raw"];
+    const allFiles = [];
 
-  for (const type of resourceTypes) {
-    let nextCursor: string | undefined = undefined;
+    for (const type of resourceTypes) {
+      let nextCursor: string | undefined = undefined;
 
-    do {
-      const response = await cloudinary.api.resources({
-        type: "upload",
-        prefix: path,
-        resource_type: type,
-        max_results: 500, // maximum number results per page
-        next_cursor: nextCursor,
-      });
+      do {
+        const response = await cloudinary.api.resources({
+          type: "upload",
+          prefix: path,
+          resource_type: type,
+          max_results: 500, // maximum number results per page
+          next_cursor: nextCursor,
+        });
 
-      allFiles.unshift(...response.resources);
+        allFiles.unshift(...response.resources);
 
-      nextCursor = response.next_cursor;
-    } while (nextCursor);
+        nextCursor = response.next_cursor;
+      } while (nextCursor);
+    }
+
+    return allFiles;
+  } catch (error) {
+    throw new CustomError("Failed to fetch file resources by path", 500);
   }
-
-  return allFiles;
 };
