@@ -10,7 +10,7 @@ const handleError: ErrorHandlerType = (err, req, res, next) => {
 
     res.statusCode = errorStatusCode;
 
-    res.render("pages/404", {
+    res.render("pages/errorPage", {
       user,
       title: "error page",
       message: errorMessage,
