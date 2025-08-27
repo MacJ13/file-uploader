@@ -157,31 +157,82 @@ export const deletePhysicalFile = async (
 };
 
 const updateCloudFileName = async (id: number, newFileName: string) => {
-  const file = await getFileById(id);
+  try {
+    const file = await getFileById(id);
 
-  if (!file) throw new CustomError("File do not exist", 404);
+    if (!file) throw new CustomError("File do not exist", 404);
 
-  const folderPath =
-    file.path.lastIndexOf("/") >= 0
-      ? file.path.slice(0, file.path.lastIndexOf("/"))
-      : "";
+    const folderPath =
+      file.path.lastIndexOf("/") >= 0
+        ? file.path.slice(0, file.path.lastIndexOf("/"))
+        : "";
 
-  const newPublicId = folderPath ? `${folderPath}/${newFileName}` : newFileName;
+    const newPublicId = folderPath
+      ? `${folderPath}/${newFileName}`
+      : newFileName;
 
-  const renamed = await cloudinary.uploader.rename(file.path, newPublicId, {
-    resource_type: file.type, // file.type, // np. "raw"
-    overwrite: true,
-  });
+    // const renamed = await cloudinary.uploader.rename(file.path, newPublicId, {
+    //   resource_type: file.type, // file.type, // np. "raw"
+    //   overwrite: true,
+    // });
 
-  await cloudinary.api.update(newPublicId, {
-    display_name: newFileName,
-    resource_type: file.type,
-  });
+    const renamedPublicId = await renameResourceFile(
+      file.path,
+      newPublicId,
+      file.type
+    );
 
-  return {
-    public_id: renamed.public_id as string,
-    fileName: `${newFileName}.${file.format}`,
-  };
+    // await cloudinary.api.update(newPublicId, {
+    //   display_name: newFileName,
+    //   resource_type: file.type,
+    // });
+
+    await updateResourceFileName(newPublicId, newFileName, file.type);
+
+    return {
+      public_id: renamedPublicId,
+      fileName: `${newFileName}.${file.format}`,
+    };
+  } catch (err) {
+    if (err instanceof CustomError) throw err;
+    else
+      throw new CustomError(
+        "Internal Service Error while updating resource file process",
+        500
+      );
+  }
+};
+
+const renameResourceFile = async (
+  filePath: string,
+  newPublicId: string,
+  type: string
+) => {
+  try {
+    const renamed = await cloudinary.uploader.rename(filePath, newPublicId, {
+      resource_type: type, // file.type, // np. "raw"
+      overwrite: true,
+    });
+
+    return renamed.public_id as string;
+  } catch (err) {
+    throw new CustomError("Failed to rename publicID file resource", 500);
+  }
+};
+
+const updateResourceFileName = async (
+  newPublicId: string,
+  newFileName: string,
+  type: string
+) => {
+  try {
+    await cloudinary.api.update(newPublicId, {
+      display_name: newFileName,
+      resource_type: type,
+    });
+  } catch (err) {
+    throw new CustomError("Failed to update resource file name", 500);
+  }
 };
 
 export const updateFileNameInDB = async (
