@@ -16,14 +16,15 @@
         </div>
         <div class="flex flex-row gap-8">
           <%- include("../partials/folderListForm.ejs") %>
-          <form class="flex items-center gap-3 form-upload-file" method="post" action="/file/upload" enctype="multipart/form-data">
+          <%- include("../partials/uploadFileForm.ejs", { folderId: locals.folder.id }) %>
+          <!-- <form class="flex items-center gap-3 form-upload-file" method="post" action="/file/upload" enctype="multipart/form-data">
             <label for="file" class="flex items-center gap-3 text-lg font-bold uppercase cursor-pointer">
               <%- include("../icons/upload.ejs") %>
               upload file
             </label>
             <input type="hidden" id="folderId" name="folderId" value="<%= locals.folder ? locals.folder.id : null %>" />
             <input class="hidden" type="file" id="file" name="file"/>
-          </form>
+          </form> -->
         </div>
        
       </div>
