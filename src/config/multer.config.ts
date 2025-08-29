@@ -1,6 +1,4 @@
-import { User } from "@prisma/client";
 import multer from "multer";
-import { resolveUploadPath } from "../services/file.service";
 
 // const fileStorage = multer.diskStorage({
 //   async destination(req, file, callback) {
@@ -23,4 +21,7 @@ import { resolveUploadPath } from "../services/file.service";
 
 // export const fileUpload = multer({ storage: fileStorage });
 
-export const fileUpload = multer({ storage: multer.memoryStorage() });
+export const fileUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 4 * 1024 * 1024 },
+});

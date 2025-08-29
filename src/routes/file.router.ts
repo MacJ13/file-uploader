@@ -1,10 +1,10 @@
 import { Router } from "express";
 import fileController from "../controllers/file.controller";
-import { fileUpload } from "../config/multer.config";
 import { redirectIfGuest } from "../middlewares/redirectAuth";
 import { passwordValidation } from "../middlewares/validators/authValidators";
 import { handleValidation } from "../middlewares/handleValidation";
 import { itemValidation } from "../middlewares/validators/itemValidators";
+import { uploadFile } from "../middlewares/uploadFile";
 
 const fileRouter = Router();
 
@@ -14,11 +14,7 @@ fileRouter.get("/all", fileController.file_list);
 
 fileRouter.get("/:fileId", fileController.file_detail);
 
-fileRouter.post(
-  "/upload",
-  fileUpload.single("file"),
-  fileController.upload_file_post
-);
+fileRouter.post("/upload", uploadFile, fileController.upload_file_post);
 
 fileRouter.get("/:fileId/delete", fileController.file_delete_get);
 
