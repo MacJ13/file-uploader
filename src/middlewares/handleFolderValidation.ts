@@ -5,7 +5,8 @@ import { validationResult } from "express-validator";
 import { getValidationErrorMessages } from "../utils/errors/getValidationErrorMessages";
 import { getFolderById, getUserFolders } from "../services/folder.service";
 import { parseFolderId } from "../utils/helpers/parseFolderId";
-import { getParentLink } from "../utils/helpers/getParentLink";
+import { URLLinkHelper } from "../utils/helpers/UrlLinkHelper";
+// import { getParentLink } from "../utils/helpers/getParentLink";
 
 export const handleFolderValidation: HandlerType = async (req, res, next) => {
   const user = req.user as User;
@@ -69,7 +70,9 @@ const renderFolderWithErrors = async (
     });
   } else {
     const folder = await getFolderById(folderId);
-    const link = getParentLink(folder?.parentFolder);
+
+    // const link = getParentLink(folder?.parentFolder);
+    const link = URLLinkHelper.getFolderUrl(folder?.parentFolderId);
 
     res.render("pages/folderDetail", {
       title: "folder detail",

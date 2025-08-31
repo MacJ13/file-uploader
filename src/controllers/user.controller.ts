@@ -1,4 +1,3 @@
-import path from "path";
 import { User } from "../../generated/prisma";
 import {
   deletePhysicalFile,
@@ -11,8 +10,8 @@ import {
   verifyUserPassword,
 } from "../services/user.service";
 import { HandlerType } from "../types/handlers";
-import { normalizeFolderName } from "../utils/helpers/normalizeFolderName";
 import { deleteResourceFolder } from "../services/folder.service";
+import { PathHelper } from "../utils/helpers/PathHelper";
 
 const get_user_dashboard: HandlerType = async (req, res, next) => {
   // console.log(req.user);
@@ -92,7 +91,11 @@ const user_delete_post: HandlerType = async (req, res, next) => {
       return;
     }
 
-    const mainUserPath = normalizeFolderName(path.join("files", user.username));
+    // const mainUserPath = PathHelper.normalizeFolderName(
+    //   path.join("files", user.username)
+    // );
+
+    const mainUserPath = PathHelper.getMainUserPath(user.username);
 
     const resourcesFiles = await getFileResourcesByPath(mainUserPath);
 

@@ -19,7 +19,7 @@ import { verifyUserPassword } from "../services/user.service";
 // import { getRedirectUrlForFolder } from "../utils/helpers/getRedirectUrlForFolder";
 import { parseFolderId } from "../utils/helpers/parseFolderId";
 import cloudinary from "../config/cloudinary.config";
-import { normalizeFolderName } from "../utils/helpers/normalizeFolderName";
+// import { normalizeFolderName } from "../utils/helpers/normalizeFolderName";
 import {
   getFileResources,
   getFileResourcesByPath,
@@ -132,10 +132,10 @@ const folder_update_post: HandlerType = async (req, res, next) => {
     const folderId = +req.params.folderId;
 
     const title = req.body.title;
-    const newProperTitle = normalizeFolderName(title);
+    const newProperTitle = PathHelper.normalizeFolderName(title);
 
     const folderName = await getFolderName(+folderId);
-    const properFolderName = normalizeFolderName(folderName);
+    const properFolderName = PathHelper.normalizeFolderName(folderName);
 
     const folderPath = (await getFolderPathFromDB(
       user.username,
@@ -143,7 +143,7 @@ const folder_update_post: HandlerType = async (req, res, next) => {
     )) as string;
     // const newFolderPath = replaceSubstring(folderPath, folderName, title);
 
-    const properPath = normalizeFolderName(folderPath);
+    const properPath = PathHelper.normalizeFolderName(folderPath);
     // const newProperPath = normalizeFolderName(newFolderPath);
 
     const allFiles = await getFileResourcesByPath(properPath);
@@ -182,7 +182,9 @@ const folder_update_post: HandlerType = async (req, res, next) => {
     // // 4. update folder title in db
     await updateFolder(title, folderId, user.username);
 
-    res.redirect(`/folder/${folderId}`);
+    const folderRedirect = URLLinkHelper.getRedirectFolderURL(folderId);
+
+    res.redirect(folderRedirect);
   } catch (err) {
     next(err);
   }
@@ -222,7 +224,7 @@ const folder_delete_post: HandlerType = async (req, res, next) => {
       +folderId
     )) as string;
 
-    const properPath = normalizeFolderName(path);
+    const properPath = PathHelper.normalizeFolderName(path);
 
     const fileResources = await getFileResources(properPath);
 

@@ -2,11 +2,12 @@ import fs from "fs/promises";
 import { getFolderPathFromDB } from "./folder.service";
 import prisma from "../config/prisma.config";
 // import { parseFilePath } from "../utils/helpers/parseFilePath";
-import { normalizeFolderName } from "../utils/helpers/normalizeFolderName";
+// import { normalizeFolderName } from "../utils/helpers/normalizeFolderName";
 import cloudinary from "../config/cloudinary.config";
 import { FileCreationType, FileResourceType } from "../types/file";
 import CustomError from "../utils/errors/CustomError";
 import { PathHelper } from "../utils/helpers/PathHelper";
+import { FileHelper } from "../utils/helpers/FileHelper";
 
 export const resolveUploadPath = async (
   username: string,
@@ -23,7 +24,7 @@ export const resolveUploadPath = async (
     // 2. create directory is necessery
     // await fs.mkdir(path, { recursive: true });
 
-    const properPath = normalizeFolderName(path);
+    const properPath = PathHelper.normalizeFolderName(path);
     // 3. return path
     return properPath;
   } catch (err) {
@@ -38,14 +39,15 @@ export const uploadFileStream = async (
   folderName: string,
   file: Express.Multer.File
 ) => {
-  const base = file.originalname.replace(/\.[^/.]+$/, ""); // "esp2"
+  // const basePublicId = file.originalname.replace(/\.[^/.]+$/, ""); // "esp2"
+  const basePublicId = FileHelper.getBaseName(file.originalname);
 
   return new Promise((resolve, reject) => {
     const result = cloudinary.uploader.upload_stream(
       {
         folder: folderName,
         resource_type: "auto",
-        public_id: base,
+        public_id: basePublicId,
       },
       async (error, result) => {
         if (error) {
@@ -256,8 +258,9 @@ export const updateFileNameInDB = async (
 };
 
 export const updateFile = async (id: number, fileName: string) => {
-  const newBase = fileName.replace(/\.[^/.]+$/, "");
+  // const newBase = fileName.replace(/\.[^/.]+$/, "");
 
+  const newBase = FileHelper.getBaseName(fileName);
   try {
     const { public_id, fileName } = await updateCloudFileName(id, newBase);
 

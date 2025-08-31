@@ -13,10 +13,11 @@ import {
 import { verifyUserPassword } from "../services/user.service";
 import { HandlerType } from "../types/handlers";
 // import { getRedirectUrlForFolder } from "../utils/helpers/getRedirectUrlForFolder";
-import { splitFileName } from "../utils/helpers/splitFileName";
+// import { splitFileName } from "../utils/helpers/splitFileName";
 import axios from "axios";
 import CustomError from "../utils/errors/CustomError";
 import { URLLinkHelper } from "../utils/helpers/UrlLinkHelper";
+import { FileHelper } from "../utils/helpers/FileHelper";
 
 const upload_file_post: HandlerType = async (req, res, next) => {
   try {
@@ -45,10 +46,12 @@ const upload_file_post: HandlerType = async (req, res, next) => {
 
     await saveFileToDB(fileCreation);
 
-    let redirectURL = "/file/all";
-    if (folderId) {
-      redirectURL = `/folder/${folderId}`;
-    }
+    // let redirectURL = "/file/all";
+    // if (folderId) {
+    //   redirectURL = `/folder/${folderId}`;
+    // }
+
+    const redirectURL = URLLinkHelper.getRedirectUrl(folderId);
 
     return res.redirect(redirectURL);
   } catch (err) {
@@ -138,8 +141,9 @@ const file_update_get: HandlerType = async (req, res, next) => {
   try {
     const file = await getFileById(fileId);
 
-    const { fileName } = splitFileName(file?.name as string);
+    // const { fileName } = splitFileName(file?.name as string);
 
+    const { fileName } = FileHelper.splitFileName(file?.name as string);
     res.render("pages/fileForm", {
       user: user,
       title: "upload file",
