@@ -12,10 +12,11 @@ import {
 } from "../services/file.service";
 import { verifyUserPassword } from "../services/user.service";
 import { HandlerType } from "../types/handlers";
-import { getRedirectUrlForFolder } from "../utils/helpers/getRedirectUrlForFolder";
+// import { getRedirectUrlForFolder } from "../utils/helpers/getRedirectUrlForFolder";
 import { splitFileName } from "../utils/helpers/splitFileName";
 import axios from "axios";
 import CustomError from "../utils/errors/CustomError";
+import { URLLinkHelper } from "../utils/helpers/UrlLinkHelper";
 
 const upload_file_post: HandlerType = async (req, res, next) => {
   try {
@@ -118,10 +119,12 @@ const file_delete_post: HandlerType = async (req, res, next) => {
 
     const deletedFile = await deleteFileWithPhysicalRemove(fileId);
 
-    const redirectUrl = deletedFile.folderId
-      ? getRedirectUrlForFolder(deletedFile.folderId)
-      : "/file/all";
+    // const redirectUrl = deletedFile.folderId
+    //   ? getRedirectUrlForFolder(deletedFile.folderId)
+    //   : "/file/all";
 
+    const redirectUrl = URLLinkHelper.getRedirectUrl(deletedFile.folderId);
+    console.log({ redirectUrl });
     res.redirect(redirectUrl);
   } catch (err) {
     next(err);

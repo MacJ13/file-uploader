@@ -14,9 +14,9 @@ import {
   updateFolderVisitedDate,
   updateResourceAssetFolder,
 } from "../services/folder.service";
-import { getParentLink } from "../utils/helpers/getParentLink";
+// import { getParentLink } from "../utils/helpers/getParentLink";
 import { verifyUserPassword } from "../services/user.service";
-import { getRedirectUrlForFolder } from "../utils/helpers/getRedirectUrlForFolder";
+// import { getRedirectUrlForFolder } from "../utils/helpers/getRedirectUrlForFolder";
 import { parseFolderId } from "../utils/helpers/parseFolderId";
 import cloudinary from "../config/cloudinary.config";
 import { normalizeFolderName } from "../utils/helpers/normalizeFolderName";
@@ -27,6 +27,7 @@ import {
 // import { getDirectoryPath } from "../utils/helpers/getDirectoryPath";
 // import { replaceSubstring } from "../utils/helpers/replaceSubstring";
 import { PathHelper } from "../utils/helpers/PathHelper";
+import { URLLinkHelper } from "../utils/helpers/UrlLinkHelper";
 
 const create_folder_get: HandlerType = (req, res, next) => {
   const user = req.user;
@@ -92,7 +93,9 @@ const folder_detail_get: HandlerType = async (req, res, next) => {
       await updateFolderVisitedDate(+folderId);
     }
 
-    const link = getParentLink(folder?.parentFolder);
+    // const link = getParentLink(folder?.parentFolder);
+
+    const link = URLLinkHelper.getFolderUrl(folder?.parentFolderId);
     // console.log(folder);
     res.render("pages/folderDetail", {
       user: user,
@@ -251,7 +254,11 @@ const folder_delete_post: HandlerType = async (req, res, next) => {
 
     const deletedFolder = await deleteFolder(+folderId);
 
-    const redirectUrl = getRedirectUrlForFolder(deletedFolder.parentFolderId);
+    // const redirectUrl = getRedirectUrlForFolder(deletedFolder.parentFolderId);
+
+    const redirectUrl = URLLinkHelper.getFolderUrl(
+      deletedFolder.parentFolderId
+    );
 
     res.redirect(redirectUrl);
   } catch (err) {
