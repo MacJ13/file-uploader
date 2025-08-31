@@ -6,4 +6,8 @@ export class URLLinkHelper {
   static getRedirectUrl(id: string | number | null) {
     return id ? `/folder/${id}` : "/file/all";
   }
+
+  static getRedirectFolderURL(id: string | number) {
+    return `/folder/${id}`;
+  }
 }
