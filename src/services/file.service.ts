@@ -1,11 +1,12 @@
 import fs from "fs/promises";
 import { getFolderPathFromDB } from "./folder.service";
 import prisma from "../config/prisma.config";
-import { parseFilePath } from "../utils/helpers/parseFilePath";
+// import { parseFilePath } from "../utils/helpers/parseFilePath";
 import { normalizeFolderName } from "../utils/helpers/normalizeFolderName";
 import cloudinary from "../config/cloudinary.config";
 import { FileCreationType, FileResourceType } from "../types/file";
 import CustomError from "../utils/errors/CustomError";
+import { PathHelper } from "../utils/helpers/PathHelper";
 
 export const resolveUploadPath = async (
   username: string,
@@ -162,10 +163,12 @@ const updateCloudFileName = async (id: number, newFileName: string) => {
 
     if (!file) throw new CustomError("File do not exist", 404);
 
-    const folderPath =
-      file.path.lastIndexOf("/") >= 0
-        ? file.path.slice(0, file.path.lastIndexOf("/"))
-        : "";
+    // const folderPath =
+    //   file.path.lastIndexOf("/") >= 0
+    //     ? file.path.slice(0, file.path.lastIndexOf("/"))
+    //     : "";
+
+    const folderPath = PathHelper.getFolderPath(file.path);
 
     const newPublicId = folderPath
       ? `${folderPath}/${newFileName}`

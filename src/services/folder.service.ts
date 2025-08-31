@@ -1,9 +1,10 @@
-import path from "path";
+// import path from "path";
 import prisma from "../config/prisma.config";
 import cloudinary from "../config/cloudinary.config";
-import { normalizeFolderName } from "../utils/helpers/normalizeFolderName";
+// import { normalizeFolderName } from "../utils/helpers/normalizeFolderName";
 import { replaceFilePath } from "./file.service";
 import CustomError from "../utils/errors/CustomError";
+import { PathHelper } from "../utils/helpers/PathHelper";
 
 export const createFolder = async (
   title: string,
@@ -110,10 +111,11 @@ export const updateFolder = async (
     // 3. get full old path and create below new full path
     const oldPath = (await getFolderPathFromDB(username, id)) as string;
 
-    const newPath = path.join(path.dirname(oldPath), newFolderName);
+    // const newPath = path.join(path.dirname(oldPath), newFolderName);
+    const newPath = PathHelper.changeFolderName(oldPath, newFolderName);
 
-    const properOldPath = normalizeFolderName(oldPath);
-    const properNewPath = normalizeFolderName(newPath);
+    const properOldPath = PathHelper.normalizeFolderName(oldPath);
+    const properNewPath = PathHelper.normalizeFolderName(newPath);
 
     await updateFolderName(id, newFolderName);
 
@@ -157,11 +159,11 @@ export const deleteFolder = async (id: number) => {
   }
 };
 
-const getFullPathFolderDirectory = (username: string, parts: string[]) => {
-  const fullPath = path.join("files", username, ...parts);
+// const getFullPathFolderDirectory = (username: string, parts: string[]) => {
+//   const fullPath = path.join("files", username, ...parts);
 
-  return fullPath;
-};
+//   return fullPath;
+// };
 
 export const getFolderPathFromDB = async (
   username: string,
@@ -178,7 +180,7 @@ export const getFolderPathFromDB = async (
       currentFolder = await getFolderById(currentFolder.parentFolderId);
     }
 
-    const fullPath = getFullPathFolderDirectory(username, parts);
+    const fullPath = PathHelper.getFullPathFolderDirectory(username, parts);
 
     return fullPath;
   } catch (err) {

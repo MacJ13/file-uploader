@@ -24,8 +24,9 @@ import {
   getFileResources,
   getFileResourcesByPath,
 } from "../services/file.service";
-import { getDirectoryPath } from "../utils/helpers/getDirectoryPath";
-import { replaceSubstring } from "../utils/helpers/replaceSubstring";
+// import { getDirectoryPath } from "../utils/helpers/getDirectoryPath";
+// import { replaceSubstring } from "../utils/helpers/replaceSubstring";
+import { PathHelper } from "../utils/helpers/PathHelper";
 
 const create_folder_get: HandlerType = (req, res, next) => {
   const user = req.user;
@@ -147,17 +148,18 @@ const folder_update_post: HandlerType = async (req, res, next) => {
     for (const file of allFiles) {
       const oldPublicId = file.public_id as string;
 
-      const fileFolderDirectory = getDirectoryPath(oldPublicId);
+      // const fileFolderDirectory = getDirectoryPath(oldPublicId);
+      const fileFolderDirectory = PathHelper.getDirectoryPath(oldPublicId);
 
       const fileType = file.resource_type;
 
-      const newPublicId = replaceSubstring(
+      const newPublicId = PathHelper.replaceSubstring(
         oldPublicId,
         properFolderName,
         newProperTitle
       );
 
-      const newFileFolderDirectory = replaceSubstring(
+      const newFileFolderDirectory = PathHelper.replaceSubstring(
         fileFolderDirectory,
         properFolderName,
         newProperTitle
@@ -224,8 +226,8 @@ const folder_delete_post: HandlerType = async (req, res, next) => {
     let folderPaths = [];
 
     for (const file of fileResources) {
-      const properPath = getDirectoryPath(file.public_id);
-
+      // const properPath = getDirectoryPath(file.public_id);
+      const properPath = PathHelper.getDirectoryPath(file.public_id);
       // let path = file.public_id.split("/");
       // path.pop();
 
