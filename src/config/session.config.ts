@@ -7,6 +7,7 @@ export const sessionMiddleware = session({
   secret: SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
+  rolling: true, // reset maxAge with every request
   cookie: {
     maxAge: 1000 * 60 * 60,
   },
