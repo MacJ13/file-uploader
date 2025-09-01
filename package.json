@@ -6,13 +6,14 @@
   "scripts": {
     "migrate": "cross-env NODE_ENV=development dotenv -e .env.development --no-expand -- prisma migrate dev --name add_session_model",
     "prisma:dev": "dotenv -e .env.development -- prisma migrate dev && dotenv -e .env.development -- prisma generate",
-    "generate": "cross-env NODE_ENV=${NODE_ENV:-development} dotenv -e .env.$NODE_ENV -- prisma generate",
+    "generate": "dotenv -e .env.$NODE_ENV -- prisma generate",
     "build:css": "postcss public/css/styles.css -o public/css/tailwind.css",
     "watch:css": "postcss public/css/styles.css -o public/css/tailwind.css --watch",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "concurrently \"npm run watch:css\" \"cross-env NODE_ENV=development ts-node-dev --respawn --transpile-only src/app.ts\"",
     "copy-views": "copyfiles -u 2 src/views/**/* dist/views",
-    "build": "npm run build:css && tsc --project tsconfig.build.json && npm run copy-views",
+    "copy-public": "copyfiles -u 1 public/**/* dist/public",
+    "build": "npm run build:css && tsc --project tsconfig.build.json && npm run copy-views && npm run copy-public && npm run generate",
+    "dev": "concurrently \"npm run watch:css\" \"cross-env NODE_ENV=development ts-node-dev --respawn --transpile-only src/app.ts\"",
     "start": "cross-env NODE_ENV=production node dist/app.js"
   },
   "keywords": [],
