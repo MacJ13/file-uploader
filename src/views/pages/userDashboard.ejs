@@ -9,10 +9,11 @@
         <div class="dashboard">
           <div class="w-full">
             <div class="dashboard-heading">
-               <a href="/folder/create">
+              <h2 class="mr-auto">last viewed folders:</h2>
+              <a class="flex items-center gap-3 text-lg font-bold uppercase" href="/folder/create">
+                <span>Create new folder</span>
                 <%- include("../icons/addItem.ejs") %>
               </a>
-              <h2>last viewed folders:</h2>
             </div>
             <% if(locals.folders.length) { %>
               <ul class="dashboard-list gap-8">
@@ -25,7 +26,7 @@
               </ul>
               <a href="/folder/all">show all folders >></a>
             <% } else { %>
-              <em>there is no folders. <u><a href="/folder/create">add new folder</a></u></em>
+              <em>There is no folders. Create new folder</em>
             <% } %>
 
            
@@ -101,7 +102,7 @@
               </table>
               <a href="#">show all files >></a>
             <% } else { %>
-                  <em>there is no files. <u><a href="#">add new file</a></u></em>
+                  <em>There is no files. Add new file</em>
             <% } %>
 
           </div>
