@@ -7,6 +7,7 @@
     "migrate": "cross-env NODE_ENV=development dotenv -e .env.development --no-expand -- prisma migrate dev --name add_session_model",
     "prisma:dev": "dotenv -e .env.development -- prisma migrate dev && dotenv -e .env.development -- prisma generate",
     "generate": "dotenv -e .env.$NODE_ENV -- prisma generate",
+    "postinstall": "prisma generate",
     "build:css": "postcss public/css/styles.css -o public/css/tailwind.css",
     "watch:css": "postcss public/css/styles.css -o public/css/tailwind.css --watch",
     "test": "echo \"Error: no test specified\" && exit 1",
