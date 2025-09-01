@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import { User } from "@prisma/client";
 import { HandlerType } from "../types/handlers";
 import { validationResult } from "express-validator";
 import { getValidationErrorMessages } from "../utils/errors/getValidationErrorMessages";
 import { getFolderById, getUserFolders } from "../services/folder.service";
 import { parseFolderId } from "../utils/helpers/parseFolderId";
 import { URLLinkHelper } from "../utils/helpers/URLlinkHelper";
+import { User } from "../../generated/prisma";
 // import { getParentLink } from "../utils/helpers/getParentLink";
 
 export const handleFolderValidation: HandlerType = async (req, res, next) => {
