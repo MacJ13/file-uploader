@@ -27,7 +27,7 @@ import {
 // import { getDirectoryPath } from "../utils/helpers/getDirectoryPath";
 // import { replaceSubstring } from "../utils/helpers/replaceSubstring";
 import { PathHelper } from "../utils/helpers/PathHelper";
-import { URLLinkHelper } from "../utils/helpers/UrlLinkHelper";
+import { URLLinkHelper } from "../utils/helpers/URLlinkHelper";
 
 const create_folder_get: HandlerType = (req, res, next) => {
   const user = req.user;
