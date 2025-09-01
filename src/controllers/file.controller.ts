@@ -16,7 +16,7 @@ import { HandlerType } from "../types/handlers";
 // import { splitFileName } from "../utils/helpers/splitFileName";
 import axios from "axios";
 import CustomError from "../utils/errors/CustomError";
-import { URLLinkHelper } from "../utils/helpers/UrlLinkHelper";
+import { URLLinkHelper } from "../utils/helpers/URLlinkHelper";
 import { FileHelper } from "../utils/helpers/FileHelper";
 
 const upload_file_post: HandlerType = async (req, res, next) => {
